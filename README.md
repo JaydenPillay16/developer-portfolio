@@ -77,19 +77,20 @@ Rather than functioning as a static CV, the portfolio provides an interactive ov
 
 ## Technology Stack
 
-The portfolio uses a modern frontend development stack, supported by animation, icon, version control, and deployment tools.
+The portfolio uses a modern frontend development stack, supported by animation, iconography, version control, and deployment tools.
 
 | Technology | Purpose |
-|---|---|
-| [React](https://react.dev/) | Component-based user interface development |
-| [TypeScript](https://www.typescriptlang.org/) | Static typing and improved code maintainability |
-| [Vite](https://vite.dev/) | Development server and production build tooling |
-| [Tailwind CSS](https://tailwindcss.com/) | Utility-first styling and responsive layouts |
-| [Motion for React](https://motion.dev/) | Animations, scroll-driven interactions, and transitions |
-| [Lucide React](https://lucide.dev/) | Consistent icons throughout the interface |
-| [Git](https://git-scm.com/) | Version control |
-| [GitHub](https://github.com/) | Source code hosting and repository management |
-| [Vercel](https://vercel.com/) | Portfolio deployment and hosting |
+|:---|:---|
+| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" width="20" height="20" alt="React logo" /> [React](https://react.dev/) | Component-based user interface development |
+| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" width="20" height="20" alt="TypeScript logo" /> [TypeScript](https://www.typescriptlang.org/) | Static typing and improved code maintainability |
+| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vitejs/vitejs-original.svg" width="20" height="20" alt="Vite logo" /> [Vite](https://vite.dev/) | Development server and production build tooling |
+| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg" width="20" height="20" alt="Tailwind CSS logo" /> [Tailwind CSS](https://tailwindcss.com/) | Utility-first styling and responsive layouts |
+| <img src="https://cdn.simpleicons.org/framer/0055FF" width="20" height="20" alt="Motion logo" /> [Motion for React](https://motion.dev/) | Animations, scroll-driven interactions, and transitions |
+| <img src="https://cdn.simpleicons.org/lucide/F56565" width="20" height="20" alt="Lucide logo" /> [Lucide React](https://lucide.dev/) | Consistent icons throughout the interface |
+| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" width="20" height="20" alt="Git logo" /> [Git](https://git-scm.com/) | Version control |
+| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" width="20" height="20" alt="GitHub logo" /> [GitHub](https://github.com/) | Source code hosting and repository management |
+| <img src="https://cdn.simpleicons.org/vercel/FFFFFF" width="20" height="20" alt="Vercel logo" /> [Vercel](https://vercel.com/) | Portfolio deployment and hosting |
+
 
 **Email:** Custom HTML and CSS email template for portfolio enquiry notifications. The specific email delivery provider depends on the contact form configuration.
 
