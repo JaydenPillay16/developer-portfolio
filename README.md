@@ -4,7 +4,7 @@ A modern, interactive developer portfolio showcasing my professional experience,
 
 Built with React, TypeScript, and Tailwind CSS, the portfolio combines a clean, responsive interface with immersive animations, thoughtful interactions, and a consistent visual identity.
 
-**Live Portfolio:** [Add your deployed portfolio URL](#)  
+**Live Portfolio:** [View my digital portfolio](https://jayden-pillay.co.za/?utm_source=chatgpt.com)  
 **LinkedIn:** [Connect with me on LinkedIn](https://www.linkedin.com/in/jayden-pillay-44947a261/)
 **GitHub:** [Explore my repositories](https://github.com/JaydenPillay16/)
 
