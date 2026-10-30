@@ -94,8 +94,8 @@ function Certifications() {
       </div>
 
       <div className="mx-auto max-w-7xl">
-        {/* Sticky heading - stays above the cards */}
-        <div className="relative z-20 mb-10 bg-[#080b20]/95 py-4 text-left backdrop-blur-md sm:mb-12 lg:sticky lg:top-24">
+        {/* Keep the heading aligned with the other sections while scrolling. */}
+        <div className="relative z-20 mb-10 text-left sm:mb-12 lg:sticky lg:top-24">
           <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-blue-400">
             Professional Development
           </p>
