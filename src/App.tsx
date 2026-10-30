@@ -9,6 +9,7 @@ import Education from "./sections/Education";
 import Certifications from "./sections/Certifications";
 import Contact from "./sections/Contact";
 import BackToTop from "./components/BackToTop";
+import CursorHalo from "./components/CursorHalo";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
       <div className="min-h-screen bg-[#080b20] text-white">
         <Navbar />
         <BackToTop />
+        <CursorHalo />
 
         <main>
           <Hero />

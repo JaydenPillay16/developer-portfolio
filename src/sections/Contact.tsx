@@ -424,12 +424,12 @@ function Contact() {
                 aria-label="Jayden Pillay - Home"
                 className="group inline-flex items-center gap-3 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
               >
-                <span className="relative flex h-11 w-11 shrink-0 items-center justify-center transition-transform duration-300 group-hover:scale-105">
+                <span className="relative flex h-11 w-12 shrink-0 items-center justify-center overflow-hidden rounded-[14px] border border-cyan-200/30 bg-[#0b1026] shadow-[0_0_18px_rgba(59,130,246,0.14)] transition-[transform,border-color,box-shadow] duration-300 group-hover:scale-105 group-hover:border-cyan-200/55 group-hover:shadow-[0_0_24px_rgba(59,130,246,0.26)] after:pointer-events-none after:absolute after:inset-[3px] after:rounded-[10px] after:border after:border-violet-300/25 after:content-['']">
                   <img
                     src={jpLogo}
                     alt=""
                     aria-hidden="true"
-                    className="h-full w-full object-contain transition-all duration-300 group-hover:drop-shadow-[0_0_8px_rgba(103,232,249,0.3)]"
+                    className="h-full w-full rounded-[11px] object-cover transition-all duration-300 group-hover:drop-shadow-[0_0_8px_rgba(103,232,249,0.3)]"
                   />
                 </span>
                 <span className="flex flex-col">

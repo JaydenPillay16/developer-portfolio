@@ -30,6 +30,21 @@
   }
 }
 
+.about-marquee {
+  animation: about-marquee-right 32s linear infinite;
+  will-change: transform;
+}
+
+@keyframes about-marquee-right {
+  from {
+    transform: translateX(-50%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
 body {
   margin: 0;
   min-width: 320px;
@@ -73,6 +88,13 @@ button {
   cursor: pointer;
 }
 
+@media (hover: hover) and (pointer: fine) {
+  body.has-custom-cursor,
+  body.has-custom-cursor * {
+    cursor: none !important;
+  }
+}
+
 ::selection {
   color: #ffffff;
   background: #885cf6;
@@ -84,6 +106,10 @@ button {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .about-marquee {
+    animation: none;
+  }
+
   *,
   *::before,
   *::after {

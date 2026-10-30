@@ -94,8 +94,8 @@ function Certifications() {
       </div>
 
       <div className="mx-auto max-w-7xl">
-        {/* Keep the heading aligned with the other sections while scrolling. */}
-        <div className="relative z-20 mb-10 text-left sm:mb-12 lg:sticky lg:top-24">
+        {/* Let the heading scroll naturally before the certification cards. */}
+        <div className="relative mb-10 text-left sm:mb-12">
           <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-blue-400">
             Professional Development
           </p>
@@ -135,21 +135,23 @@ function Certifications() {
             whileInView={{ opacity: 1, scaleX: 1 }}
             viewport={{ once: true, amount: 0.4 }}
             transition={{
-              duration: shouldReduceMotion ? 0 : 0.8,
+              duration: shouldReduceMotion ? 0 : 0.85,
+              delay: shouldReduceMotion ? 0 : 0.15,
               ease: smoothEase,
             }}
-            className="relative mt-6 h-[3px] w-32 origin-left overflow-hidden rounded-full bg-gradient-to-r from-cyan-400 via-blue-500 to-violet-500 shadow-[0_0_16px_rgba(59,130,246,0.35)]"
+            className="relative mt-6 h-1 w-32 origin-left overflow-hidden rounded-full bg-gradient-to-r from-cyan-400 via-blue-500 to-violet-500 shadow-[0_0_18px_rgba(96,165,250,0.4)]"
           >
             {!shouldReduceMotion && (
               <motion.span
                 aria-hidden="true"
-                className="absolute inset-y-0 left-0 w-1/2 rounded-full bg-gradient-to-r from-transparent via-white to-transparent blur-[1px]"
-                animate={{ x: ["-100%", "250%"] }}
+                className="absolute inset-y-0 left-0 w-1/2 rounded-full bg-gradient-to-r from-transparent via-white to-transparent"
+                initial={{ x: "-100%" }}
+                whileInView={{ x: "250%" }}
+                viewport={{ once: true, amount: 0.4 }}
                 transition={{
-                  duration: 1.6,
+                  duration: 1.1,
                   ease: "easeInOut",
-                  repeat: Infinity,
-                  repeatDelay: 1.2,
+                  delay: 0.3,
                 }}
               />
             )}

@@ -210,7 +210,7 @@ function About() {
     <section
       id="about"
       ref={sectionRef}
-      className={`relative isolate bg-[#0b1026] text-white ${
+      className={`relative isolate overflow-x-clip bg-[#0b1026] text-white ${
         shouldReduceMotion ? "min-h-screen" : "lg:min-h-[400vh]"
       }`}
     >
@@ -225,7 +225,7 @@ function About() {
       </div>
 
       <div
-        className={`relative mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-10 px-5 py-20 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12 lg:px-10 lg:py-8 xl:px-12 ${
+        className={`relative mx-auto grid w-full min-w-0 max-w-7xl grid-cols-1 items-center gap-10 px-5 py-20 sm:px-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-12 lg:px-10 lg:pb-24 lg:pt-8 xl:px-12 ${
           shouldReduceMotion ? "" : "lg:sticky lg:top-0 lg:min-h-screen"
         }`}
       >
@@ -346,19 +346,11 @@ function About() {
             </div>
           </div>
 
-          <div className="mt-8 flex items-center gap-3 lg:mt-10">
-            <span className="flex h-9 w-9 items-center justify-center rounded-full border border-blue-400/20 bg-blue-500/[0.08] text-blue-300">
-              <span className="h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.7)]" />
-            </span>
-            <p className="text-xs leading-5 text-slate-500 sm:text-sm">
-              Driven by curiosity. Focused on meaningful solutions.
-            </p>
-          </div>
         </div>
 
         {/* Mobile and reduced-motion layout: show all four cards */}
         <div
-          className={`grid grid-cols-1 gap-4 sm:grid-cols-2 ${
+          className={`grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 ${
             shouldReduceMotion ? "" : "lg:hidden"
           }`}
         >
@@ -374,7 +366,7 @@ function About() {
         {/* Desktop cinematic card sequence */}
         {!shouldReduceMotion && (
           <div
-            className="relative mx-auto hidden w-full max-w-xl lg:block"
+            className="relative mx-auto hidden min-w-0 w-full max-w-xl lg:block"
             style={{ perspective: 1200 }}
           >
             <div className="relative h-[400px]">
@@ -483,7 +475,7 @@ function About() {
 
         {/* Reduced-motion desktop layout */}
         {shouldReduceMotion && (
-          <div className="hidden grid-cols-2 gap-4 lg:grid">
+          <div className="hidden min-w-0 grid-cols-2 gap-4 lg:grid">
             {highlights.map((highlight, index) => (
               <AboutHighlightCard
                 key={highlight.number}
@@ -493,6 +485,62 @@ function About() {
             ))}
           </div>
         )}
+
+        {/* Full-bleed marquee gives the About section a distinctive closing beat. */}
+        <div className="relative left-1/2 z-20 mt-8 w-screen min-w-0 -translate-x-1/2 overflow-hidden border-y border-white/[0.07] bg-[linear-gradient(90deg,rgba(9,15,37,0.96),rgba(14,20,49,0.88),rgba(9,15,37,0.96))] py-4 shadow-[0_0_60px_rgba(59,130,246,0.07)] sm:py-5 lg:col-span-full lg:mt-0 lg:py-6">
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-300/60 to-violet-400/50"
+          />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-violet-400/35 to-cyan-300/40"
+          />
+
+          {shouldReduceMotion ? (
+            <p className="px-5 text-center text-lg font-semibold tracking-tight text-slate-200 sm:text-2xl">
+              Driven by curiosity
+              <span className="mx-3 text-cyan-300">·</span>
+              Focused on meaningful solutions
+            </p>
+          ) : (
+            <div
+              className="overflow-hidden py-2 sm:py-3"
+              style={{
+                maskImage:
+                  "linear-gradient(90deg, transparent, black 5%, black 95%, transparent)",
+              }}
+              role="group"
+              aria-label="Driven by curiosity. Focused on meaningful solutions. Always learning. Building with purpose."
+            >
+              <div aria-hidden="true" className="about-marquee flex w-max items-center">
+                {[0, 1].map((copy) => (
+                  <div
+                    key={copy}
+                    className="flex shrink-0 items-center gap-8 px-6 text-xl font-semibold tracking-[-0.035em] text-slate-200 sm:gap-12 sm:px-10 sm:text-3xl xl:gap-16 xl:text-4xl"
+                  >
+                    <span>
+                      Driven by <span className="bg-gradient-to-r from-cyan-300 via-blue-400 to-violet-400 bg-clip-text text-transparent">curiosity</span>
+                    </span>
+                    <span className="h-2 w-2 shrink-0 rounded-full bg-cyan-300 shadow-[0_0_14px_rgba(103,232,249,0.8)]" />
+                    <span>
+                      Focused on <span className="bg-gradient-to-r from-blue-300 to-violet-400 bg-clip-text text-transparent">meaningful solutions</span>
+                    </span>
+                    <span className="h-2 w-2 shrink-0 rounded-full bg-blue-300 shadow-[0_0_14px_rgba(96,165,250,0.8)]" />
+                    <span>
+                      Always <span className="bg-gradient-to-r from-cyan-300 to-blue-400 bg-clip-text text-transparent">learning</span>
+                    </span>
+                    <span className="h-2 w-2 shrink-0 rounded-full bg-violet-300 shadow-[0_0_14px_rgba(167,139,250,0.8)]" />
+                    <span>
+                      Building with <span className="bg-gradient-to-r from-blue-300 via-violet-300 to-fuchsia-300 bg-clip-text text-transparent">purpose</span>
+                    </span>
+                    <span className="h-2 w-2 shrink-0 rounded-full bg-cyan-300 shadow-[0_0_14px_rgba(103,232,249,0.8)]" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );
