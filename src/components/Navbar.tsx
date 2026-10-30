@@ -208,7 +208,7 @@ function Navbar() {
             clickedSectionRef.current = null;
           }}
           className="group flex shrink-0 items-center gap-3 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
-          aria-label="Jayden Pillay — Home"
+          aria-label="Jayden Pillay - Home"
         >
           <span className="relative flex h-11 w-11 shrink-0 items-center justify-center transition-transform duration-300 group-hover:scale-105">
             <img

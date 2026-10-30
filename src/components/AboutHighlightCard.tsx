@@ -189,7 +189,7 @@ function AboutHighlightCard({
 
         {/* Foreground content */}
         <div className="relative z-10 flex h-full flex-col">
-          {/* Icon only — card numbering removed */}
+          {/* Icon only - card numbering removed */}
           <div className="flex items-center">
             <motion.span
               className={`relative inline-flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-white/15 bg-gradient-to-br ${accent} text-white shadow-lg transition-all duration-300 group-hover:scale-105 group-hover:rounded-xl group-hover:shadow-xl`}
@@ -253,7 +253,7 @@ function AboutHighlightCard({
             ))}
           </div>
 
-          {/* Card footer — no arrow */}
+          {/* Card footer - no arrow */}
           <div className="mt-auto border-t border-white/[0.08] pt-4 transition-colors duration-300 group-hover:border-white/[0.14]">
             <span className="text-xs leading-5 text-slate-500 transition-colors duration-300 group-hover:text-slate-300">
               {details.supportingText}

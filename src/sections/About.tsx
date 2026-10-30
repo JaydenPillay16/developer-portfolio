@@ -287,7 +287,7 @@ function About() {
             <p>
               With hands-on experience in AWS, Amazon Connect, infrastructure as
               code, CI/CD, and Microsoft Power Platform, I enjoy working across
-              the software development lifecycle — from understanding a problem
+              the software development lifecycle - from understanding a problem
               and designing a solution to implementing, testing, and deploying
               it. I'm particularly interested in building solutions that are
               scalable, reliable, and genuinely useful.
@@ -298,7 +298,7 @@ function About() {
               challenges. I enjoy breaking complex problems into manageable
               pieces, exploring different approaches, and continually learning
               how to do things better. For me, engineering is about more than
-              writing code — it's about thinking critically, collaborating, and
+              writing code - it's about thinking critically, collaborating, and
               turning ideas into something meaningful.
             </p>
           </div>

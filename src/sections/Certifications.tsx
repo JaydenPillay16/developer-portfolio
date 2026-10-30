@@ -94,7 +94,7 @@ function Certifications() {
       </div>
 
       <div className="mx-auto max-w-7xl">
-        {/* Sticky heading — stays above the cards */}
+        {/* Sticky heading - stays above the cards */}
         <div className="relative z-20 mb-10 bg-[#080b20]/95 py-4 text-left backdrop-blur-md sm:mb-12 lg:sticky lg:top-20">
           <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-blue-400">
             Professional Development
@@ -162,7 +162,7 @@ function Certifications() {
           </p>
         </div>
 
-        {/* Certification cards — separate from the sticky heading */}
+        {/* Certification cards - separate from the sticky heading */}
         <div className="grid min-w-0 grid-cols-1 items-stretch gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {certifications.map((certification, index) => (
             <motion.article

@@ -376,7 +376,7 @@ function Experience() {
               </motion.span>
             </h2>
 
-            {/* Animated underline — replays on every viewport entry */}
+            {/* Animated underline - replays on every viewport entry */}
             <div className="mt-6 h-1 w-32 overflow-hidden rounded-full bg-white/[0.06]">
               <motion.div
                 key={/* Re-key when entering/leaving the viewport */ undefined}
@@ -414,7 +414,7 @@ function Experience() {
             <div className="mt-8 hidden items-center gap-3 lg:flex">
               <span className="h-px w-8 bg-cyan-400/60" />
               <span className="text-xs font-medium tracking-[0.3em] text-slate-500">
-                JULY 2023 — PRESENT
+                JULY 2023 - PRESENT
               </span>
             </div>
           </div>
