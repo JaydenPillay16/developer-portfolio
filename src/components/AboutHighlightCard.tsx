@@ -1,4 +1,3 @@
-import { Lightbulb, Search, Puzzle, TrendingUp } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 import {
@@ -16,6 +15,7 @@ type AboutHighlightCardProps = {
   description: string;
   accent: string;
   index: number;
+  icon: LucideIcon;
 };
 
 const cardDetails: Record<
@@ -24,32 +24,32 @@ const cardDetails: Record<
     category: string;
     supportingText: string;
     tags: string[];
-    icon: LucideIcon;
+    glow: string;
   }
 > = {
   "01": {
     category: "THINK DIFFERENTLY",
     supportingText: "Perspective creates possibility.",
     tags: ["Creative thinking", "New ideas"],
-    icon: Lightbulb,
+    glow: "rgba(34, 211, 238, 0.18)",
   },
   "02": {
     category: "ALWAYS LEARNING",
     supportingText: "Every question is an opportunity.",
     tags: ["Curiosity", "Discovery"],
-    icon: Search,
+    glow: "rgba(167, 139, 250, 0.20)",
   },
   "03": {
     category: "MAKE IT SOLVABLE",
     supportingText: "Clarity turns complexity into progress.",
     tags: ["Critical thinking", "Solutions"],
-    icon: Puzzle,
+    glow: "rgba(96, 165, 250, 0.18)",
   },
   "04": {
     category: "BUILT ON PROGRESS",
     supportingText: "Better every day, not perfect overnight.",
     tags: ["Adaptability", "Growth"],
-    icon: TrendingUp,
+    glow: "rgba(217, 70, 239, 0.17)",
   },
 };
 
@@ -59,12 +59,13 @@ function AboutHighlightCard({
   description,
   accent,
   index,
+  icon,
 }: AboutHighlightCardProps) {
   const ref = useRef<HTMLDivElement>(null);
   const shouldReduceMotion = useReducedMotion();
 
   const details = cardDetails[number] ?? cardDetails["01"];
-  const Icon = details.icon;
+  const Icon = icon;
 
   const pointerX = useMotionValue(50);
   const pointerY = useMotionValue(50);
@@ -81,7 +82,7 @@ function AboutHighlightCard({
     damping: 24,
   });
 
-  const glow = useMotionTemplate`radial-gradient(circle at ${pointerX}% ${pointerY}%, rgba(99, 102, 241, 0.20), transparent 60%)`;
+  const glow = useMotionTemplate`radial-gradient(circle at ${pointerX}% ${pointerY}%, ${details.glow}, transparent 62%)`;
 
   function handleMouseMove(event: MouseEvent<HTMLDivElement>) {
     if (shouldReduceMotion || !ref.current) return;
@@ -96,8 +97,8 @@ function AboutHighlightCard({
     pointerX.set(percentX);
     pointerY.set(percentY);
 
-    rotateY.set(((percentX - 50) / 50) * 4);
-    rotateX.set(((50 - percentY) / 50) * 4);
+    rotateY.set(((percentX - 50) / 50) * 2.5);
+    rotateX.set(((50 - percentY) / 50) * 2.5);
   }
 
   function handleMouseLeave() {
@@ -146,7 +147,7 @@ function AboutHighlightCard({
       className="group relative h-full"
     >
       <div
-        className={`relative isolate flex h-full min-h-[310px] flex-col overflow-hidden rounded-2xl border border-white/[0.10] bg-gradient-to-br from-slate-800/80 via-[#10172d]/95 to-[#080D1C] p-5 shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-[border-color,box-shadow,transform] duration-500 group-hover:-translate-y-1 group-hover:border-blue-400/30 group-hover:shadow-[0_20px_60px_rgba(59,130,246,0.12)] sm:min-h-[330px] sm:p-6 lg:p-7`}
+        className={`relative isolate flex h-full min-h-[310px] flex-col overflow-hidden rounded-2xl border border-white/[0.10] bg-gradient-to-br from-slate-800/80 via-[#10172d]/95 to-[#080D1C] p-5 shadow-[0_12px_38px_rgba(0,0,0,0.2)] transition-[border-color,box-shadow,transform] duration-500 group-hover:-translate-y-1 group-hover:border-white/20 group-hover:shadow-[0_24px_65px_rgba(0,0,0,0.32)] sm:min-h-[330px] sm:p-6 lg:p-7`}
       >
         {/* Accent wash */}
         <div
@@ -166,13 +167,13 @@ function AboutHighlightCard({
           className={`pointer-events-none absolute -right-12 -top-16 z-0 h-48 w-48 rounded-full bg-gradient-to-br ${accent} opacity-[0.10] blur-3xl transition-all duration-700 group-hover:scale-125 group-hover:opacity-25`}
         />
 
-        {/* Decorative background icon */}
-        <Icon
+        {/* Quiet editorial number replaces the oversized watermark icon. */}
+        <span
           aria-hidden="true"
-          size={180}
-          strokeWidth={0.65}
-          className="pointer-events-none absolute -bottom-8 -right-7 z-0 h-36 w-36 rotate-[-12deg] text-white/[0.025] transition-all duration-700 group-hover:rotate-0 group-hover:scale-110 group-hover:text-white/[0.05] sm:h-44 sm:w-44"
-        />
+          className="pointer-events-none absolute -right-2 -top-7 z-0 select-none font-mono text-[6.5rem] font-medium leading-none tracking-[-0.1em] text-white/[0.025] transition-colors duration-500 group-hover:text-white/[0.045] sm:-right-1 sm:-top-8 sm:text-[7.5rem]"
+        >
+          {number}
+        </span>
 
         {/* Cursor-following light */}
         <motion.div
@@ -189,47 +190,52 @@ function AboutHighlightCard({
 
         {/* Foreground content */}
         <div className="relative z-10 flex h-full flex-col">
-          {/* Icon only - card numbering removed */}
-          <div className="flex items-center">
+          <div className="flex items-center justify-between">
             <motion.span
-              className={`relative inline-flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-white/15 bg-gradient-to-br ${accent} text-white shadow-lg transition-all duration-300 group-hover:scale-105 group-hover:rounded-xl group-hover:shadow-xl`}
-              whileHover={
-                shouldReduceMotion ? undefined : { rotate: -4, y: -2 }
-              }
-              transition={{
-                type: "spring",
-                stiffness: 300,
-                damping: 18,
-              }}
+              className={`group/icon relative inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-[18px] border border-white/15 bg-gradient-to-br ${accent} text-white shadow-[0_10px_28px_rgba(0,0,0,0.24)] transition-[transform,border-radius,box-shadow] duration-300 group-hover:scale-[1.04] group-hover:rounded-2xl group-hover:shadow-[0_12px_32px_rgba(59,130,246,0.2)]`}
+              whileHover={shouldReduceMotion ? undefined : { rotate: -3, y: -2 }}
+              transition={{ type: "spring", stiffness: 280, damping: 20 }}
             >
               <span
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-transparent"
+                className="pointer-events-none absolute -inset-1.5 rounded-[21px] border border-white/[0.08] transition-all duration-300 group-hover:border-white/[0.18] group-hover:shadow-[0_0_20px_rgba(103,232,249,0.10)]"
               />
-
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 rounded-[18px] bg-gradient-to-br from-white/30 via-transparent to-transparent"
+              />
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-x-3 top-0 h-px bg-gradient-to-r from-transparent via-white/70 to-transparent opacity-70"
+              />
               <Icon
                 aria-hidden="true"
-                size={23}
+                size={25}
                 strokeWidth={1.8}
-                className="relative z-10"
+                className="relative z-10 drop-shadow-[0_2px_5px_rgba(0,0,0,0.25)] transition-transform duration-300 group-hover:scale-110"
               />
-
               {!shouldReduceMotion && (
                 <motion.span
                   aria-hidden="true"
-                  className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent"
-                  whileHover={{ x: "200%" }}
-                  transition={{
-                    duration: 0.65,
-                    ease: "easeInOut",
-                  }}
-                />
+                  className="pointer-events-none absolute inset-0 overflow-hidden rounded-[18px]"
+                >
+                  <motion.span
+                    className="absolute -inset-y-2 left-0 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/35 to-transparent"
+                    initial={{ x: "-180%" }}
+                    whileHover={{ x: "450%" }}
+                    transition={{ duration: 0.7, ease: "easeInOut" }}
+                  />
+                </motion.span>
               )}
             </motion.span>
+
+            <span className="relative z-10 rounded-full border border-white/[0.08] bg-white/[0.025] px-3 py-1.5 font-mono text-[10px] tracking-[0.12em] text-slate-500 transition-colors duration-300 group-hover:border-white/[0.14] group-hover:text-slate-300">
+              {number} <span className="text-slate-600">/</span> 04
+            </span>
           </div>
 
           {/* Card content */}
-          <p className="mt-7 text-[10px] font-semibold uppercase tracking-[0.2em] text-blue-300/80">
+          <p className={`mt-7 bg-gradient-to-r ${accent} bg-clip-text text-[10px] font-semibold uppercase tracking-[0.2em] text-transparent`}>
             {details.category}
           </p>
 

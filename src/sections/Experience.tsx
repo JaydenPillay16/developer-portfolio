@@ -2,34 +2,39 @@ import { motion, useReducedMotion } from "motion/react";
 import type { ComponentType, SVGProps } from "react";
 import {
   SiGithubactions,
+  SiJson,
   SiTerraform,
   SiMysql,
 } from "@icons-pack/react-simple-icons";
-import { FileJson, Workflow, Code2, Cloud } from "lucide-react";
+import { Workflow, Code2 } from "lucide-react";
 
 type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
 
 type TechnologyStyle = {
   icon: IconComponent;
+  image?: string;
   color: string;
   hover: string;
 };
 
 const technologyStyles: Record<string, TechnologyStyle> = {
   AWS: {
-    icon: Cloud,
+    icon: Code2,
+    image: "/images/technologies/aws.svg",
     color: "text-orange-400",
     hover:
       "hover:border-orange-400/40 hover:bg-orange-400/[0.06] hover:shadow-[0_0_18px_rgba(251,146,60,0.10)]",
   },
   "Amazon Connect": {
-    icon: Cloud,
+    icon: Code2,
+    image: "/images/technologies/Connect.svg",
     color: "text-cyan-400",
     hover:
       "hover:border-cyan-400/40 hover:bg-cyan-400/[0.06] hover:shadow-[0_0_18px_rgba(34,211,238,0.10)]",
   },
   "Amazon Lex": {
-    icon: Cloud,
+    icon: Code2,
+    image: "/images/technologies/amazon-lex.svg",
     color: "text-violet-400",
     hover:
       "hover:border-violet-400/40 hover:bg-violet-400/[0.06] hover:shadow-[0_0_18px_rgba(167,139,250,0.10)]",
@@ -41,7 +46,7 @@ const technologyStyles: Record<string, TechnologyStyle> = {
       "hover:border-violet-400/40 hover:bg-violet-400/[0.06] hover:shadow-[0_0_18px_rgba(167,139,250,0.10)]",
   },
   JSON: {
-    icon: FileJson,
+    icon: SiJson,
     color: "text-amber-300",
     hover:
       "hover:border-amber-400/40 hover:bg-amber-400/[0.06] hover:shadow-[0_0_18px_rgba(251,191,36,0.10)]",
@@ -60,18 +65,21 @@ const technologyStyles: Record<string, TechnologyStyle> = {
   },
   "Power Apps": {
     icon: Code2,
+    image: "/images/technologies/power-apps.png",
     color: "text-violet-300",
     hover:
       "hover:border-violet-400/40 hover:bg-violet-400/[0.06] hover:shadow-[0_0_18px_rgba(167,139,250,0.10)]",
   },
   "Power Automate": {
     icon: Workflow,
+    image: "/images/technologies/power-automate.svg",
     color: "text-sky-300",
     hover:
       "hover:border-sky-400/40 hover:bg-sky-400/[0.06] hover:shadow-[0_0_18px_rgba(56,189,248,0.10)]",
   },
   SharePoint: {
     icon: Code2,
+    image: "/images/technologies/sharepoint.svg",
     color: "text-emerald-300",
     hover:
       "hover:border-emerald-400/40 hover:bg-emerald-400/[0.06] hover:shadow-[0_0_18px_rgba(110,231,183,0.10)]",
@@ -90,6 +98,7 @@ const technologyStyles: Record<string, TechnologyStyle> = {
   },
   "Microsoft Power Platform": {
     icon: Code2,
+    image: "/images/technologies/power-platform.png",
     color: "text-amber-300",
     hover:
       "hover:border-amber-400/40 hover:bg-amber-400/[0.06] hover:shadow-[0_0_18px_rgba(251,191,36,0.10)]",
@@ -164,12 +173,21 @@ function TechnologyBadge({ name }: { name: string }) {
 
   return (
     <span
-      className={`group inline-flex items-center gap-2 rounded-lg border border-white/[0.09] bg-white/[0.03] px-3 py-2 text-xs font-medium tracking-wide text-slate-200 transition-all duration-300 hover:-translate-y-0.5 ${style.hover}`}
+      className={`group inline-flex items-center gap-2 rounded-lg border border-white/[0.09] bg-white/[0.03] px-3 py-2 text-xs font-medium tracking-wide text-slate-200 transition-[transform,border-color,background-color,box-shadow] duration-200 ease-out hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/60 ${style.hover}`}
     >
-      <Icon
-        aria-hidden="true"
-        className={`h-4 w-4 shrink-0 transition-transform duration-300 group-hover:scale-110 ${style.color}`}
-      />
+      {style.image ? (
+        <img
+          aria-hidden="true"
+          src={style.image}
+          alt=""
+          className="h-4 w-4 shrink-0 object-contain transition-transform duration-200 group-hover:scale-105"
+        />
+      ) : (
+        <Icon
+          aria-hidden="true"
+          className={`h-4 w-4 shrink-0 transition-transform duration-200 group-hover:scale-105 ${style.color}`}
+        />
+      )}
       {name}
     </span>
   );
@@ -177,28 +195,14 @@ function TechnologyBadge({ name }: { name: string }) {
 
 function TimelineMarker({
   current,
-  index,
   reduceMotion,
 }: {
   current: boolean;
-  index: number;
   reduceMotion: boolean;
 }) {
   const accent = current
-    ? {
-        border: "rgba(103,232,249,0.95)",
-        core: "#a5f3fc",
-        glow: "rgba(34,211,238,",
-      }
-    : {
-        border: "rgba(129,140,248,0.9)",
-        core: "#c4b5fd",
-        glow: "rgba(129,140,248,",
-      };
-
-  const restingGlow = current
-    ? "0 0 0 4px rgba(34,211,238,0.12), 0 0 22px rgba(34,211,238,0.45), 0 0 42px rgba(34,211,238,0.18)"
-    : "0 0 0 3px rgba(129,140,248,0.12), 0 0 18px rgba(129,140,248,0.3), 0 0 32px rgba(129,140,248,0.12)";
+    ? { border: "rgba(103,232,249,0.9)", core: "#a5f3fc", glow: "rgba(34,211,238,0.22)" }
+    : { border: "rgba(129,140,248,0.8)", core: "#c4b5fd", glow: "rgba(129,140,248,0.16)" };
 
   return (
     <motion.span
@@ -207,104 +211,24 @@ function TimelineMarker({
       whileInView={
         reduceMotion
           ? undefined
-          : {
-              scale: [0.85, 1.2, 1],
-              boxShadow: [
-                `0 0 0 2px ${accent.glow}0.08)`,
-                `0 0 0 9px ${accent.glow}0.2), 0 0 38px ${accent.glow}0.75)`,
-                restingGlow,
-              ],
-            }
+          : { scale: [0.88, 1.06, 1] }
       }
-      viewport={{ once: false, amount: 0.3 }}
+      viewport={{ once: true, amount: 0.25 }}
       transition={{
-        duration: 0.9,
-        times: [0, 0.55, 1],
+        duration: reduceMotion ? 0 : 0.55,
         ease: smoothEase,
       }}
       className="absolute left-0 top-7 z-10 flex h-6 w-6 items-center justify-center rounded-full border bg-[#0b1020] sm:h-8 sm:w-8"
       style={{
         borderColor: accent.border,
-        boxShadow: restingGlow,
+        boxShadow: `0 0 0 3px ${accent.glow}, 0 0 20px ${accent.glow}`,
       }}
     >
-      {/* Soft pulsing halo */}
-      <motion.span
-        className="pointer-events-none absolute -inset-2 rounded-full"
-        style={{
-          background: `radial-gradient(circle, ${accent.glow}0.3) 0%, transparent 72%)`,
-        }}
-        animate={
-          reduceMotion
-            ? undefined
-            : {
-                opacity: [0.4, 1, 0.4],
-                scale: [0.8, 1.35, 0.8],
-              }
-        }
-        transition={{
-          duration: 2.2,
-          delay: index * 0.18,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-
-      {/* Expanding ripple */}
-      {!reduceMotion && (
-        <motion.span
-          className="pointer-events-none absolute inset-0 rounded-full border"
-          style={{ borderColor: accent.border }}
-          animate={{
-            scale: [1, 1.8, 2.3],
-            opacity: [0.75, 0.35, 0],
-          }}
-          transition={{
-            duration: 2,
-            delay: index * 0.3,
-            repeat: Infinity,
-            ease: "easeOut",
-          }}
-        />
-      )}
-
-      {/* Rotating accent ring */}
-      {!reduceMotion && (
-        <motion.span
-          className="pointer-events-none absolute -inset-[4px] rounded-full border border-transparent"
-          style={{
-            borderTopColor: accent.border,
-            borderRightColor: "rgba(96,165,250,0.9)",
-          }}
-          animate={{ rotate: 360 }}
-          transition={{
-            duration: 3.5 + index * 0.4,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-        />
-      )}
-
-      {/* Bright central core */}
-      <motion.span
+      <span
         className="relative z-10 block h-2 w-2 rounded-full"
         style={{
           backgroundColor: accent.core,
-          boxShadow: `0 0 12px ${accent.glow}0.95)`,
-        }}
-        animate={
-          reduceMotion
-            ? undefined
-            : {
-                scale: [1, 1.45, 1],
-                opacity: [0.8, 1, 0.8],
-              }
-        }
-        transition={{
-          duration: 1.7,
-          delay: index * 0.15,
-          repeat: Infinity,
-          ease: "easeInOut",
+          boxShadow: `0 0 12px ${accent.glow}`,
         }}
       />
     </motion.span>
@@ -336,7 +260,7 @@ function Experience() {
           <div className="pb-6 pt-10 text-left sm:pt-12 lg:py-16">
             <motion.p
               initial={shouldReduceMotion ? false : { opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.5 }}
               transition={{ duration: 0.6, ease: smoothEase }}
               className="mb-4 text-xs font-semibold uppercase tracking-[0.3em] text-blue-400 sm:text-sm"
@@ -379,10 +303,9 @@ function Experience() {
             {/* Animated underline - replays on every viewport entry */}
             <div className="mt-6 h-1 w-32 overflow-hidden rounded-full bg-white/[0.06]">
               <motion.div
-                key={/* Re-key when entering/leaving the viewport */ undefined}
                 initial={{ scaleX: 0, opacity: 0 }}
                 whileInView={{ scaleX: 1, opacity: 1 }}
-                viewport={{ once: false, amount: 0.2 }}
+                viewport={{ once: true, amount: 0.2 }}
                 transition={{
                   duration: shouldReduceMotion ? 0 : 0.85,
                   ease: smoothEase,
@@ -395,7 +318,7 @@ function Experience() {
                     className="absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-transparent via-white to-transparent"
                     initial={{ x: "-100%" }}
                     whileInView={{ x: "250%" }}
-                    viewport={{ once: false, amount: 0.2 }}
+                    viewport={{ once: true, amount: 0.2 }}
                     transition={{
                       duration: 1.1,
                       ease: "easeInOut",
@@ -452,7 +375,6 @@ function Experience() {
                 >
                   <TimelineMarker
                     current={experience.current}
-                    index={index}
                     reduceMotion={Boolean(shouldReduceMotion)}
                   />
 
@@ -480,7 +402,7 @@ function Experience() {
                             boxShadow: accent.glow,
                           }
                     }
-                    viewport={{ once: false, amount: 0.3 }}
+                    viewport={{ once: true, amount: 0.2 }}
                     transition={{
                       duration: shouldReduceMotion ? 0 : 0.8,
                       delay: shouldReduceMotion ? 0 : index * 0.06,
@@ -511,7 +433,7 @@ function Experience() {
                           }}
                           initial={{ left: "-80%" }}
                           whileInView={{ left: "150%" }}
-                          viewport={{ once: false, amount: 0.3 }}
+                          viewport={{ once: true, amount: 0.2 }}
                           transition={{
                             duration: 1.3,
                             delay: index * 0.08,
@@ -531,7 +453,7 @@ function Experience() {
                           ? { scaleX: 1, opacity: 0.5 }
                           : { scaleX: 1, opacity: [0.2, 1, 0.65] }
                       }
-                      viewport={{ once: false, amount: 0.3 }}
+                      viewport={{ once: true, amount: 0.2 }}
                       transition={{
                         duration: 0.9,
                         delay: index * 0.05,
@@ -601,76 +523,6 @@ function Experience() {
               );
             })}
           </div>
-        </div>
-        {/* Cinematic transition into Technical Capabilities */}
-        <div className="relative mx-auto mt-8 max-w-7xl sm:mt-12 lg:mt-16">
-          <motion.div
-            aria-hidden="true"
-            initial={shouldReduceMotion ? false : { opacity: 0, scaleX: 0 }}
-            whileInView={{ opacity: 1, scaleX: 1 }}
-            viewport={{ once: true, amount: 0.5 }}
-            transition={{
-              duration: shouldReduceMotion ? 0 : 1.1,
-              ease: smoothEase,
-            }}
-            className="relative h-px origin-center overflow-hidden bg-gradient-to-r from-transparent via-blue-400/40 to-transparent"
-          >
-            {!shouldReduceMotion && (
-              <motion.span
-                className="absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-cyan-300 to-transparent"
-                initial={{ x: "-100%" }}
-                whileInView={{ x: "400%" }}
-                viewport={{ once: true, amount: 0.5 }}
-                transition={{
-                  duration: 1.5,
-                  ease: "easeInOut",
-                  delay: 0.25,
-                }}
-              />
-            )}
-          </motion.div>
-
-          <motion.div
-            initial={shouldReduceMotion ? false : { opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.5 }}
-            transition={{
-              duration: shouldReduceMotion ? 0 : 0.7,
-              delay: shouldReduceMotion ? 0 : 0.25,
-              ease: smoothEase,
-            }}
-            className="flex flex-col items-center justify-center gap-3 py-5 text-center sm:flex-row sm:gap-4 sm:py-7"
-          >
-            <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500 sm:text-xs">
-              Experience in action
-            </span>
-
-            <span
-              aria-hidden="true"
-              className="hidden h-px w-8 bg-gradient-to-r from-cyan-400/60 to-violet-400/60 sm:block"
-            />
-
-            <span className="inline-flex items-center gap-2 text-xs font-medium tracking-wide text-slate-400 sm:text-sm">
-              The technologies behind the work
-              <motion.span
-                aria-hidden="true"
-                animate={shouldReduceMotion ? undefined : { y: [0, 4, 0] }}
-                transition={{
-                  duration: 1.8,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                className="text-cyan-300"
-              >
-                ↓
-              </motion.span>
-            </span>
-          </motion.div>
-
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-32 w-3/4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500/[0.05] blur-[70px]"
-          />
         </div>
       </div>
     </section>

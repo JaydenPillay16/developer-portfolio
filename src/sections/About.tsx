@@ -1,4 +1,3 @@
-import { Workflow } from "lucide-react";
 import {
   motion,
   useMotionValueEvent,
@@ -7,6 +6,13 @@ import {
   useSpring,
   useTransform,
 } from "motion/react";
+import {
+  BrainCircuit,
+  Palette,
+  Rocket,
+  SearchCode,
+  Workflow,
+} from "lucide-react";
 import { useRef, useState } from "react";
 import AboutHighlightCard from "../components/AboutHighlightCard";
 
@@ -17,6 +23,7 @@ const highlights = [
     description:
       "I look beyond the obvious, explore different perspectives, and find thoughtful ways to turn ideas into practical solutions.",
     accent: "from-blue-500 to-cyan-400",
+    icon: Palette,
   },
   {
     number: "02",
@@ -24,6 +31,7 @@ const highlights = [
     description:
       "I want to understand how things work, why they work, and how they can be improved. Learning is a constant part of my journey.",
     accent: "from-violet-500 to-purple-400",
+    icon: SearchCode,
   },
   {
     number: "03",
@@ -31,6 +39,7 @@ const highlights = [
     description:
       "I approach challenges logically, breaking complexity into manageable steps and focusing on solutions that make a difference.",
     accent: "from-cyan-400 to-blue-500",
+    icon: BrainCircuit,
   },
   {
     number: "04",
@@ -38,6 +47,7 @@ const highlights = [
     description:
       "I believe progress comes from challenging myself, staying adaptable, and consistently pushing beyond what I already know.",
     accent: "from-fuchsia-500 to-violet-500",
+    icon: Rocket,
   },
 ];
 
@@ -93,11 +103,11 @@ function About() {
   });
   // Each card enters the shared display, settles, and exits
   // as the next card takes its place.
-  const card1Y = useTransform(progress, [0, 0.05, 0.18, 0.25], [65, 0, 0, -75]);
+  const card1Y = useTransform(progress, [0, 0.05, 0.18, 0.25], [48, 0, 0, -52]);
   const card1Rotate = useTransform(
     progress,
     [0, 0.05, 0.18, 0.25],
-    [8, 0, 0, -8],
+    [5, 0, 0, -5],
   );
   const card1Opacity = useTransform(
     progress,
@@ -107,18 +117,18 @@ function About() {
   const card1Scale = useTransform(
     progress,
     [0, 0.05, 0.18, 0.25],
-    [0.96, 1, 1, 0.96],
+    [0.98, 1, 1, 0.98],
   );
 
   const card2Y = useTransform(
     progress,
     [0.22, 0.28, 0.43, 0.5],
-    [65, 0, 0, -75],
+    [48, 0, 0, -52],
   );
   const card2Rotate = useTransform(
     progress,
     [0.22, 0.28, 0.43, 0.5],
-    [8, 0, 0, -8],
+    [5, 0, 0, -5],
   );
   const card2Opacity = useTransform(
     progress,
@@ -128,18 +138,18 @@ function About() {
   const card2Scale = useTransform(
     progress,
     [0.22, 0.28, 0.43, 0.5],
-    [0.96, 1, 1, 0.96],
+    [0.98, 1, 1, 0.98],
   );
 
   const card3Y = useTransform(
     progress,
     [0.47, 0.53, 0.68, 0.75],
-    [65, 0, 0, -75],
+    [48, 0, 0, -52],
   );
   const card3Rotate = useTransform(
     progress,
     [0.47, 0.53, 0.68, 0.75],
-    [8, 0, 0, -8],
+    [5, 0, 0, -5],
   );
   const card3Opacity = useTransform(
     progress,
@@ -149,14 +159,14 @@ function About() {
   const card3Scale = useTransform(
     progress,
     [0.47, 0.53, 0.68, 0.75],
-    [0.96, 1, 1, 0.96],
+    [0.98, 1, 1, 0.98],
   );
 
-  const card4Y = useTransform(progress, [0.72, 0.78, 0.94, 1], [65, 0, 0, -35]);
+  const card4Y = useTransform(progress, [0.72, 0.78, 0.94, 1], [48, 0, 0, -24]);
   const card4Rotate = useTransform(
     progress,
     [0.72, 0.78, 0.94, 1],
-    [8, 0, 0, -3],
+    [5, 0, 0, -2],
   );
   const card4Opacity = useTransform(
     progress,
@@ -166,7 +176,7 @@ function About() {
   const card4Scale = useTransform(
     progress,
     [0.72, 0.78, 0.94, 1],
-    [0.96, 1, 1, 1],
+    [0.98, 1, 1, 1],
   );
 
   const cardAnimations = [
@@ -347,7 +357,11 @@ function About() {
         </div>
 
         {/* Mobile and reduced-motion layout: show all four cards */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:hidden">
+        <div
+          className={`grid grid-cols-1 gap-4 sm:grid-cols-2 ${
+            shouldReduceMotion ? "" : "lg:hidden"
+          }`}
+        >
           {highlights.map((highlight, index) => (
             <AboutHighlightCard
               key={highlight.number}

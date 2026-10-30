@@ -668,8 +668,12 @@ export default function Technologies() {
     <section
       id="technologies"
       aria-labelledby="technologies-heading"
-      className="relative isolate overflow-clip bg-[#080b20] px-6 pt-8 text-white sm:px-10 sm:pt-12 lg:px-16 lg:pt-16"
+      className="relative isolate overflow-clip bg-[#080b20] px-6 pt-14 text-white sm:px-10 sm:pt-16 lg:px-16 lg:pt-20"
     >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-300/25 to-transparent"
+      />
       {/* Ambient background */}
       <div
         aria-hidden="true"
@@ -877,32 +881,6 @@ export default function Technologies() {
         </div>
       </div>
 
-      {/* Closing transition */}
-      <motion.div
-        initial={reduceMotion ? false : { opacity: 0, y: 22 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.3 }}
-        transition={{
-          duration: reduceMotion ? 0 : 0.7,
-          ease: smoothEase,
-        }}
-        className="relative mx-auto mt-12 max-w-7xl border-t border-white/[0.07] pb-10 pt-8 sm:mt-16 sm:pt-10"
-      >
-        <div className="flex flex-col items-center justify-center gap-3 text-center sm:flex-row sm:gap-4">
-          <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-500 sm:text-xs">
-            Always learning
-          </span>
-
-          <span
-            aria-hidden="true"
-            className="hidden h-px w-8 bg-gradient-to-r from-cyan-400/60 to-violet-400/60 sm:block"
-          />
-
-          <span className="text-xs text-slate-400 sm:text-sm">
-            Building, exploring, and improving with every project.
-          </span>
-        </div>
-      </motion.div>
     </section>
   );
 }

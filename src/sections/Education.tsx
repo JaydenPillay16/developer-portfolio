@@ -194,7 +194,7 @@ function FoundationHighlight({ reduceMotion }: { reduceMotion: boolean }) {
     <motion.div
       initial={reduceMotion ? false : { opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: false, amount: 0.4 }}
+      viewport={{ once: true, amount: 0.2 }}
       transition={{
         duration: reduceMotion ? 0 : 0.7,
         ease: smoothEase,
@@ -318,8 +318,8 @@ export default function Education() {
   const headingRef = useRef<HTMLDivElement>(null);
 
   const isHeadingInView = useInView(headingRef, {
-    once: false,
-    amount: 0.35,
+    once: true,
+    amount: 0.2,
   });
 
   return (
@@ -496,7 +496,7 @@ export default function Education() {
                   filter: "blur(0px)",
                 }}
                 viewport={{
-                  once: false,
+                  once: true,
                   amount: 0.15,
                 }}
                 transition={{

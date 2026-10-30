@@ -1,4 +1,5 @@
 import Navbar from "./components/Navbar";
+import { MotionConfig } from "motion/react";
 import Hero from "./sections/Hero";
 import About from "./sections/About";
 import Experience from "./sections/Experience";
@@ -11,21 +12,23 @@ import BackToTop from "./components/BackToTop";
 
 function App() {
   return (
-    <div className="min-h-screen bg-[#080b20] text-white">
-      <Navbar />
-      <BackToTop />
+    <MotionConfig reducedMotion="user">
+      <div className="min-h-screen bg-[#080b20] text-white">
+        <Navbar />
+        <BackToTop />
 
-      <main>
-        <Hero />
-        <About />
-        <Experience />
-        <Technologies />
-        <Projects />
-        <Education />
-        <Certifications />
-        <Contact />
-      </main>
-    </div>
+        <main>
+          <Hero />
+          <About />
+          <Experience />
+          <Technologies />
+          <Projects />
+          <Education />
+          <Certifications />
+          <Contact />
+        </main>
+      </div>
+    </MotionConfig>
   );
 }
 

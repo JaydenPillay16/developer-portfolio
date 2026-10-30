@@ -35,6 +35,7 @@ export default function BackToTop() {
       type="button"
       aria-label="Back to top"
       title="Back to top"
+      tabIndex={visible ? 0 : -1}
       onClick={scrollToTop}
       initial={false}
       animate={
@@ -78,7 +79,7 @@ export default function BackToTop() {
         aria-hidden="true"
         className="pointer-events-none absolute -inset-1 -z-10 rounded-2xl bg-gradient-to-br from-cyan-400 via-blue-500 to-violet-500 opacity-40 blur-md"
         animate={
-          reduceMotion
+          reduceMotion || !visible
             ? {}
             : {
                 opacity: [0.25, 0.65, 0.25],
@@ -99,7 +100,7 @@ export default function BackToTop() {
       >
         <motion.span
           className="absolute -inset-y-2 left-0 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/35 to-transparent"
-          animate={reduceMotion ? {} : { x: ["-180%", "450%"] }}
+          animate={reduceMotion || !visible ? {} : { x: ["-180%", "450%"] }}
           transition={{
             duration: 1.6,
             repeat: reduceMotion ? 0 : Infinity,
@@ -112,7 +113,7 @@ export default function BackToTop() {
       <motion.span
         className="relative z-10 flex items-center justify-center"
         animate={
-          reduceMotion
+          reduceMotion || !visible
             ? {}
             : {
                 y: [0, -2, 0],

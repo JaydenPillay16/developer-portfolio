@@ -330,6 +330,7 @@ function Navbar() {
       <div
         id="navbar-mobile-menu"
         aria-hidden={!menuOpen}
+        inert={!menuOpen}
         className={[
           "overflow-hidden border-t border-white/[0.08] md:hidden",
           "transition-[max-height,opacity] duration-300 ease-out",
@@ -387,6 +388,7 @@ function Navbar() {
             <div
               id="navbar-mobile-more"
               aria-hidden={!moreOpen}
+              inert={!moreOpen}
               className={[
                 "grid overflow-hidden transition-[grid-template-rows,opacity] duration-300",
                 moreOpen

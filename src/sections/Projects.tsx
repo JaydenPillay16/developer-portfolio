@@ -152,7 +152,11 @@ function Projects() {
         </div>
 
         {/* Right project column */}
-        <div className="grid min-w-0 gap-5 sm:gap-6">
+        <div className="relative grid min-w-0 gap-5 sm:gap-6 lg:gap-7">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute bottom-8 left-4 top-8 hidden w-px bg-gradient-to-b from-cyan-300/30 via-blue-400/15 to-violet-400/25 sm:block"
+          />
           {projects.map((project, index) => (
             <motion.article
               key={project.number}
@@ -164,26 +168,43 @@ function Projects() {
                 delay: shouldReduceMotion ? 0 : index * 0.1,
                 ease: smoothEase,
               }}
-              className={`group relative min-w-0 overflow-hidden rounded-2xl border border-white/[0.09] bg-gradient-to-br from-[#101831] via-[#0d142b] to-[#0b1024] transition-colors duration-300 hover:border-white/[0.18] ${
+              whileHover={
+                shouldReduceMotion
+                  ? undefined
+                  : {
+                      y: -5,
+                      borderColor: project.featured
+                        ? "rgba(103,232,249,0.38)"
+                        : "rgba(167,139,250,0.32)",
+                      boxShadow: project.featured
+                        ? "0 24px 70px rgba(0,0,0,0.34), 0 0 36px rgba(34,211,238,0.10)"
+                        : "0 24px 70px rgba(0,0,0,0.34), 0 0 36px rgba(129,140,248,0.10)",
+                    }
+              }
+              className={`group relative min-w-0 overflow-hidden rounded-2xl border border-white/[0.09] bg-gradient-to-br from-[#131d37] via-[#0e162e] to-[#090f22] shadow-[0_16px_45px_rgba(0,0,0,0.16)] transition-[border-color,box-shadow] duration-300 hover:border-white/[0.2] ${
                 project.featured ? "sm:p-8" : "sm:p-7"
               } p-6`}
             >
               {/* Fine accent line */}
               <div
                 aria-hidden="true"
-                className={`absolute left-0 top-0 h-px w-1/3 bg-gradient-to-r ${project.accent} opacity-70 transition-all duration-500 group-hover:w-2/3 group-hover:opacity-100`}
+                className={`absolute left-8 right-8 top-0 h-px origin-left scale-x-50 bg-gradient-to-r ${project.accent} opacity-70 transition-[transform,opacity] duration-500 group-hover:scale-x-100 group-hover:opacity-100`}
               />
 
-              {/* Decorative glow, kept deliberately subtle */}
+              {/* Soft color wash that appears on hover */}
               <div
                 aria-hidden="true"
-                className={`pointer-events-none absolute -right-16 -top-20 h-48 w-48 rounded-full bg-gradient-to-br ${project.accent} opacity-[0.045] blur-3xl transition-opacity duration-300 group-hover:opacity-[0.09]`}
+                className={`pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full bg-gradient-to-br ${project.accent} opacity-[0.045] blur-[90px] transition-opacity duration-500 group-hover:opacity-[0.13]`}
+              />
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 rounded-2xl bg-[radial-gradient(ellipse_at_15%_0%,rgba(255,255,255,0.055),transparent_45%)] opacity-70"
               />
 
-              <div className="relative">
+              <div className="relative z-10">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <span className="font-mono text-sm text-slate-500">
+                    <span className="inline-flex h-7 min-w-7 items-center justify-center rounded-md border border-white/[0.08] bg-white/[0.035] px-1.5 font-mono text-[11px] font-medium text-slate-400">
                       {project.number}
                     </span>
 
@@ -192,26 +213,27 @@ function Projects() {
                       className="h-1 w-1 rounded-full bg-slate-600"
                     />
 
-                    <span className="text-[10px] font-semibold tracking-[0.17em] text-slate-400 sm:text-[11px]">
+                    <span className="text-[10px] font-semibold tracking-[0.19em] text-slate-400 sm:text-[11px]">
                       {project.category}
                     </span>
                   </div>
 
                   {project.featured && (
-                    <span className="rounded-full border border-cyan-300/15 bg-cyan-300/[0.06] px-2.5 py-1 text-[10px] font-medium tracking-wide text-cyan-200/90">
-                      Featured
+                    <span className="inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/[0.07] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-cyan-200">
+                      <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-cyan-300 shadow-[0_0_8px_rgba(103,232,249,0.8)]" />
+                      Featured work
                     </span>
                   )}
                 </div>
 
-                <div className="mt-6 flex items-start gap-4">
+                <div className="mt-6 flex items-start gap-4 sm:mt-7">
                   <div
                     aria-hidden="true"
-                    className={`mt-1 h-10 w-1 shrink-0 rounded-full bg-gradient-to-b ${project.accent} opacity-80`}
+                    className={`mt-1 h-12 w-1 shrink-0 rounded-full bg-gradient-to-b ${project.accent} opacity-80 shadow-[0_0_16px_rgba(96,165,250,0.2)] transition-all duration-300 group-hover:h-14 group-hover:opacity-100`}
                   />
 
                   <div className="min-w-0">
-                    <p className="text-sm font-medium text-blue-300">
+                    <p className="text-xs font-semibold uppercase tracking-[0.12em] text-blue-300 sm:text-sm sm:normal-case sm:tracking-normal">
                       {project.client}
                     </p>
 
@@ -227,33 +249,47 @@ function Projects() {
                   </div>
                 </div>
 
-                <p className="mt-5 max-w-2xl text-sm leading-7 text-slate-400 sm:text-[15px]">
+                <p className="mt-5 max-w-2xl text-sm leading-7 text-slate-300/80 sm:text-[15px] sm:leading-8">
                   {project.description}
                 </p>
 
-                <div className="mt-6 border-t border-white/[0.07] pt-5">
-                  <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-                    Technologies & tools
-                  </p>
+                <div className="mt-6 border-t border-white/[0.08] pt-5 sm:mt-7 sm:pt-6">
+                  <div className="mb-3 flex items-center justify-between gap-3">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">
+                      Technologies & tools
+                    </p>
+                    <span aria-hidden="true" className="h-px w-10 bg-gradient-to-r from-white/10 to-transparent" />
+                  </div>
 
                   <div className="flex flex-wrap gap-2">
-                    {project.technologies.map((technology) => (
-                      <span
+                    {project.technologies.map((technology, techIndex) => (
+                      <motion.span
                         key={technology}
-                        className="rounded-md border border-white/[0.08] bg-white/[0.025] px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-200 group-hover:border-white/[0.12]"
+                        initial={shouldReduceMotion ? false : { opacity: 0, y: 5 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, amount: 0.4 }}
+                        transition={{
+                          duration: shouldReduceMotion ? 0 : 0.35,
+                          delay: shouldReduceMotion ? 0 : index * 0.08 + techIndex * 0.035,
+                          ease: smoothEase,
+                        }}
+                        className="inline-flex items-center gap-2 rounded-lg border border-white/[0.085] bg-[#080d1d]/55 px-2.5 py-1.5 text-xs font-medium text-slate-300 transition-[border-color,background-color,color,transform] duration-200 group-hover:border-white/[0.12] hover:-translate-y-0.5 hover:border-cyan-300/25 hover:bg-white/[0.055] hover:text-white"
                       >
+                        <span aria-hidden="true" className={`h-1 w-1 rounded-full bg-gradient-to-r ${project.accent} opacity-80`} />
                         {technology}
-                      </span>
+                      </motion.span>
                     ))}
                   </div>
                 </div>
 
-                <div className="mt-6 flex items-center gap-2 text-xs text-slate-500">
+                <div className="mt-5 flex items-center gap-2.5 text-xs text-slate-500 sm:mt-6">
                   <span
                     aria-hidden="true"
-                    className={`h-1.5 w-1.5 rounded-full bg-gradient-to-r ${project.accent}`}
+                    className={`h-1.5 w-1.5 rounded-full bg-gradient-to-r ${project.accent} shadow-[0_0_8px_rgba(34,211,238,0.35)]`}
                   />
-                  Professional experience
+                  <span className="tracking-wide">Professional experience</span>
+                  <span aria-hidden="true" className="ml-auto h-px w-8 bg-white/[0.08]" />
+                  <span className="font-mono text-[10px] text-slate-600">{project.number} / 03</span>
                 </div>
               </div>
             </motion.article>

@@ -1,4 +1,3 @@
-import heroImage from "../assets/hero-image.png";
 import Button from "../components/Button";
 import { FaGithub, FaLinkedin, FaDownload } from "react-icons/fa";
 import { motion, useReducedMotion } from "motion/react";
@@ -112,7 +111,7 @@ function Hero() {
                 shouldReduceMotion ? undefined : { y: -2, scale: 1.015 }
               }
               transition={{ duration: 0.25 }}
-              className="group relative inline-flex items-center gap-3 overflow-hidden rounded-full border border-blue-400/20 bg-[#0c122b]/80 px-4 py-2.5 shadow-[0_0_25px_rgba(59,130,246,0.06)] backdrop-blur-xl transition-all duration-500 hover:border-cyan-300/40 hover:shadow-[0_0_30px_rgba(59,130,246,0.12)]"
+              className="group relative isolate inline-flex max-w-full flex-wrap items-center gap-x-3 gap-y-2 overflow-hidden rounded-2xl border border-cyan-300/15 bg-gradient-to-r from-[#0c122b]/95 via-[#101832]/90 to-[#11132d]/95 px-3.5 py-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_12px_32px_rgba(0,0,0,0.18)] backdrop-blur-xl transition-[transform,border-color,box-shadow] duration-300 hover:border-cyan-300/35 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_14px_36px_rgba(59,130,246,0.12)] sm:rounded-full sm:px-4"
             >
               {/* Moving glass highlight */}
               {!shouldReduceMotion && (
@@ -121,66 +120,49 @@ function Hero() {
                   className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 rotate-[20deg] bg-gradient-to-r from-transparent via-white/[0.08] to-transparent"
                   animate={{ x: ["0%", "500%"] }}
                   transition={{
-                    duration: 2.4,
+                    duration: 2.6,
                     ease: "easeInOut",
                     repeat: Infinity,
-                    repeatDelay: 4,
+                    repeatDelay: 5,
                   }}
                 />
               )}
 
               {/* Animated status indicator */}
-              <span className="relative flex h-2.5 w-2.5 shrink-0 items-center justify-center">
+              <span className="relative flex h-3 w-3 shrink-0 items-center justify-center">
                 {!shouldReduceMotion && (
                   <motion.span
                     aria-hidden="true"
-                    className="absolute inset-0 rounded-full bg-emerald-400/60"
+                    className="absolute inset-0 rounded-full bg-emerald-300/55"
                     animate={{
-                      scale: [1, 2.1, 2.1],
+                      scale: [1, 1.9, 1.9],
                       opacity: [0.6, 0, 0],
                     }}
                     transition={{
-                      duration: 2,
+                      duration: 2.4,
                       ease: "easeOut",
                       repeat: Infinity,
-                      repeatDelay: 0.25,
+                      repeatDelay: 0.6,
                     }}
                   />
                 )}
 
-                <span className="relative h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.9)]" />
+                <span className="relative h-2 w-2 rounded-full bg-emerald-300 shadow-[0_0_12px_rgba(52,211,153,0.75)] ring-2 ring-emerald-300/15" />
               </span>
 
               {/* Refined identity typography */}
-              <span className="relative flex items-center gap-2.5 text-[10px] font-semibold uppercase tracking-[0.19em] text-slate-300 sm:text-xs sm:tracking-[0.22em]">
+              <span className="relative flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-300 sm:gap-x-3 sm:text-xs sm:tracking-[0.2em]">
                 <span className="whitespace-nowrap">Software Engineer</span>
 
                 <span
                   aria-hidden="true"
-                  className="h-3.5 w-px bg-gradient-to-b from-transparent via-blue-400/70 to-transparent"
+                  className="hidden h-3.5 w-px bg-gradient-to-b from-transparent via-blue-400/70 to-transparent sm:block"
                 />
 
                 <span className="whitespace-nowrap bg-gradient-to-r from-cyan-300 via-blue-300 to-violet-300 bg-clip-text text-transparent">
                   Cloud &amp; Automation
                 </span>
               </span>
-
-              {/* Animated bottom accent */}
-              {!shouldReduceMotion && (
-                <motion.span
-                  aria-hidden="true"
-                  className="pointer-events-none absolute bottom-0 left-5 right-5 h-px origin-left bg-gradient-to-r from-transparent via-cyan-400/60 to-transparent"
-                  animate={{
-                    scaleX: [0.35, 1, 0.35],
-                    opacity: [0.3, 0.8, 0.3],
-                  }}
-                  transition={{
-                    duration: 3.5,
-                    ease: "easeInOut",
-                    repeat: Infinity,
-                  }}
-                />
-              )}
             </motion.div>
           </motion.div>
 
@@ -200,9 +182,29 @@ function Hero() {
             className="text-5xl font-extrabold leading-[1.02] tracking-[-0.045em] sm:text-6xl lg:text-7xl xl:text-8xl"
           >
             JAYDEN
-            <span className="mt-2 block bg-gradient-to-r from-blue-400 via-violet-400 to-purple-500 bg-clip-text text-transparent">
+            <motion.span
+              className="mt-2 block bg-clip-text text-transparent drop-shadow-[0_8px_28px_rgba(59,130,246,0.12)]"
+              style={{
+                backgroundImage:
+                  "linear-gradient(100deg, #3b82f6 0%, #6366f1 38%, #8b5cf6 72%, #a855f7 100%)",
+                backgroundSize: "200% 100%",
+                backgroundPosition: "0% 50%",
+                backgroundClip: "text",
+                WebkitBackgroundClip: "text",
+              }}
+              animate={
+                shouldReduceMotion
+                  ? undefined
+                  : { backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }
+              }
+              transition={
+                shouldReduceMotion
+                  ? undefined
+                  : { duration: 8, ease: "linear", repeat: Infinity }
+              }
+            >
               PILLAY
-            </span>
+            </motion.span>
           </motion.h1>
 
           {/* Professional headline */}
@@ -380,8 +382,10 @@ function Hero() {
           >
             {/* Your image fills the entire card */}
             <img
-              src={heroImage}
+              src="/images/hero-portrait.jpg"
               alt="Jayden Pillay, Software Engineer"
+              fetchPriority="high"
+              decoding="async"
               className="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]"
             />
 

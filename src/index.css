@@ -24,14 +24,32 @@
   box-sizing: border-box;
 }
 
-html {
-  scroll-behavior: smooth;
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+}
+
+/* A quiet technical grid and soft color bloom tie the section backgrounds together. */
+main > section {
+  background-image:
+    radial-gradient(ellipse at 12% 0%, rgba(34, 211, 238, 0.035), transparent 48%),
+    radial-gradient(ellipse at 88% 34%, rgba(139, 92, 246, 0.035), transparent 48%),
+    linear-gradient(rgba(148, 163, 184, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.018) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 72px 72px, 72px 72px;
+  scroll-margin-top: 6rem;
+}
+
+/* Keep muted copy legible on the dark surfaces used throughout the portfolio. */
+.text-slate-500 {
+  color: #74839a;
 }
 
 body,

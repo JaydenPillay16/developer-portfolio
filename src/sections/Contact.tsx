@@ -1,5 +1,5 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
-import emailjs from "@emailjs/browser";
+import jpLogo from "../assets/jp-logo.png";
 
 import {
   EMAILJS_PUBLIC_KEY,
@@ -18,6 +18,8 @@ type FormData = {
 };
 
 type SubmissionStatus = "" | "success" | "error";
+
+const currentYear = new Date().getFullYear();
 
 function Contact() {
   const shouldReduceMotion = useReducedMotion() ?? false;
@@ -58,6 +60,7 @@ function Contact() {
     setStatus("");
 
     try {
+      const { default: emailjs } = await import("@emailjs/browser");
       await emailjs.send(
         EMAILJS_SERVICE_ID,
         EMAILJS_TEMPLATE_ID,
@@ -87,13 +90,22 @@ function Contact() {
   }
 
   const inputClass =
-    "w-full rounded-xl border border-white/10 bg-[#080d1c]/80 px-4 py-3.5 text-sm text-white placeholder:text-slate-500 outline-none transition-all duration-300 focus:border-blue-400/60 focus:ring-2 focus:ring-blue-500/10";
+    "w-full rounded-xl border border-white/10 bg-[#080d1c]/80 px-4 py-3.5 text-sm text-white placeholder:text-[#74839a] outline-none transition-all duration-300 focus:border-blue-400/60 focus:ring-2 focus:ring-blue-500/10";
+
+  const footerLinks = [
+    { label: "About", href: "#about" },
+    { label: "Projects", href: "#projects" },
+    { label: "Certifications", href: "#certifications" },
+    { label: "Experience", href: "#experience" },
+    { label: "Education", href: "#education" },
+    { label: "Contact", href: "#contact" },
+  ];
 
   return (
     <section
       id="contact"
       aria-labelledby="contact-heading"
-      className="relative isolate overflow-hidden bg-[#080b20] px-5 py-24 text-white sm:px-10 sm:py-28 lg:px-16 lg:py-32"
+      className="relative isolate overflow-hidden bg-[#080b20] px-5 pb-0 pt-24 text-white sm:px-10 sm:pb-0 sm:pt-28 lg:px-16 lg:pb-0 lg:pt-32"
     >
       {/* Ambient background */}
       <div
@@ -394,12 +406,71 @@ function Contact() {
           </motion.div>
         </div>
 
-        {/* Footer */}
-        <footer className="mt-20 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 text-center text-sm text-slate-500 sm:flex-row sm:text-left">
-          <p>
-            © {new Date().getFullYear()} Jayden Pillay. All rights reserved.
-          </p>
-          <p>Designed with purpose. Built with code.</p>
+        {/* Site footer */}
+        <footer aria-label="Site footer" className="relative mt-20 border-t border-white/[0.09] pt-10 sm:mt-24 sm:pt-12">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-px left-0 h-px w-48 bg-gradient-to-r from-cyan-300/70 via-blue-400/35 to-transparent"
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -right-12 -top-12 -z-10 h-48 w-64 rounded-full bg-violet-500/[0.07] blur-[80px]"
+          />
+
+          <div className="grid gap-10 pb-10 md:grid-cols-[1fr_auto] md:items-start md:gap-16">
+            <div>
+              <a
+                href="#home"
+                aria-label="Jayden Pillay - Home"
+                className="group inline-flex items-center gap-3 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+              >
+                <span className="relative flex h-11 w-11 shrink-0 items-center justify-center transition-transform duration-300 group-hover:scale-105">
+                  <img
+                    src={jpLogo}
+                    alt=""
+                    aria-hidden="true"
+                    className="h-full w-full object-contain transition-all duration-300 group-hover:drop-shadow-[0_0_8px_rgba(103,232,249,0.3)]"
+                  />
+                </span>
+                <span className="flex flex-col">
+                  <span className="text-sm font-semibold tracking-wide text-white sm:text-[15px]">
+                    Jayden Pillay
+                  </span>
+                  <span className="mt-1 bg-gradient-to-r from-cyan-300 via-blue-400 to-violet-400 bg-clip-text text-[9px] font-semibold tracking-[0.19em] text-transparent sm:text-[10px]">
+                    SOFTWARE ENGINEER
+                  </span>
+                </span>
+              </a>
+              <p className="mt-4 max-w-sm text-sm leading-6 text-slate-400">
+                Building thoughtful software across cloud, automation, and enterprise technology.
+              </p>
+            </div>
+
+            <nav aria-label="Footer navigation">
+              <h3 className="mb-4 text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-500">Explore</h3>
+              <ul className="grid grid-flow-col grid-rows-3 gap-x-10 gap-y-3 sm:gap-x-16">
+                {footerLinks.map((link) => (
+                  <li key={link.href}>
+                    <a
+                      href={link.href}
+                      className="group relative inline-flex py-1 text-sm text-slate-400 transition-colors duration-300 hover:-translate-y-0.5 hover:text-cyan-200 hover:drop-shadow-[0_0_10px_rgba(103,232,249,0.45)] focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/60"
+                    >
+                      {link.label}
+                      <span
+                        aria-hidden="true"
+                        className="absolute inset-x-0 -bottom-px h-[2px] origin-center scale-x-0 rounded-full bg-gradient-to-r from-cyan-400 via-blue-400 to-violet-400 opacity-70 transition-all duration-300 ease-out group-hover:scale-x-75 group-hover:opacity-100 group-hover:shadow-[0_0_8px_rgba(103,232,249,0.4)]"
+                      />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
+
+          <div className="flex flex-col gap-2 border-t border-white/[0.07] py-5 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+            <p>© {currentYear} Jayden Pillay. All rights reserved.</p>
+            <p className="tracking-wide">Designed with purpose. Built with code.</p>
+          </div>
         </footer>
       </div>
     </section>
