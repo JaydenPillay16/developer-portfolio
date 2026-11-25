@@ -6,7 +6,7 @@ const projects = [
     title: "Amazon Connect Contact Centre Solution",
     client: "ABSA Group",
     description:
-      "Contributing to a cloud-based contact centre solution, working with contact flows, conversational experiences, and infrastructure configuration to support enterprise contact centre requirements.",
+      "I contribute to contact flows, conversational experiences, and infrastructure configuration for ABSA Group’s cloud contact centre.",
     technologies: [
       "Amazon Connect",
       "Amazon Lex",
@@ -22,7 +22,7 @@ const projects = [
     title: "Internal Document & Records Management System",
     client: "IRIS",
     description:
-      "Contributed to an internal document and records management system, supporting the organisation of business information and digital document workflows.",
+      "I supported the organisation of business records and the digital document workflows used to manage them.",
     technologies: [
       "SharePoint",
       "Microsoft Power Platform",
@@ -35,7 +35,7 @@ const projects = [
     title: "Automated Quality Documentation",
     client: "AQD",
     description:
-      "Worked on document-focused automation to help streamline quality documentation processes and reduce manual work within enterprise workflows.",
+      "I worked on automating quality documentation workflows to reduce manual document handling.",
     technologies: [
       "Power Automate",
       "SharePoint",
@@ -172,21 +172,14 @@ function Projects() {
           whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.35 }}
           transition={{ duration: shouldReduceMotion ? 0 : 0.6, ease: revealEase }}
-          className="mb-10 flex flex-col gap-5 border-b border-[#b9cbe0] pb-8 sm:mb-12 sm:pb-10 lg:flex-row lg:items-end lg:justify-between lg:gap-14"
+          className="mb-10 border-b border-[#b9cbe0] pb-8 sm:mb-12 sm:pb-10"
         >
-          <div>
-            <h2
-              id="projects-heading"
-              className="max-w-3xl text-4xl font-bold leading-[0.98] tracking-[-0.055em] sm:text-5xl lg:text-6xl"
-            >
-              Selected work
-            </h2>
-          </div>
-          <p className="max-w-xl text-base leading-7 text-[#30455d] sm:text-lg sm:leading-8">
-            A selection of enterprise technology and automation work from my
-            professional experience, highlighting the systems and tools behind
-            the work.
-          </p>
+          <h2
+            id="projects-heading"
+            className="max-w-3xl text-4xl font-bold leading-[0.98] tracking-[-0.055em] sm:text-5xl lg:text-6xl"
+          >
+            Selected work
+          </h2>
         </motion.header>
 
         <motion.article
@@ -208,6 +201,7 @@ function Projects() {
                 {featuredProject.title}
               </h3>
               <p className="mt-5 max-w-xl text-sm leading-7 text-[#c2d0df] sm:mt-6 sm:text-base sm:leading-8">
+                <strong className="font-semibold text-white">My contribution. </strong>
                 {featuredProject.description}
               </p>
               <TechnologyList technologies={featuredProject.technologies} />
@@ -247,6 +241,7 @@ function Projects() {
                   {project.title}
                 </h3>
                 <p className="mt-3 max-w-2xl text-sm leading-6 text-[#30455d] sm:text-base sm:leading-7">
+                  <strong className="font-semibold text-[#10243b]">My contribution. </strong>
                   {project.description}
                 </p>
               </div>

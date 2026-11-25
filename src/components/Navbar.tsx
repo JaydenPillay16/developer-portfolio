@@ -6,8 +6,8 @@ const navLinks = [
   { label: "Home", href: "#home" },
   { label: "About", href: "#about" },
   { label: "Skills", href: "#skills" },
-  { label: "Experience", href: "#experience" },
   { label: "Projects", href: "#projects" },
+  { label: "Experience", href: "#experience" },
   { label: "Education", href: "#education" },
   { label: "Certifications", href: "#certifications" },
 ];
@@ -15,13 +15,12 @@ const navLinks = [
 const contactHref = "#contact";
 const mobilePrimaryLinks = navLinks.slice(0, 4);
 const mobileMoreLinks = navLinks.slice(4);
-const tabletPrimaryLinks = navLinks.slice(0, 3);
-const tabletMoreLinks = navLinks.slice(3);
+const widePrimaryLinks = mobilePrimaryLinks.slice(1);
 
 function Navbar() {
   const navRef = useRef<HTMLElement>(null);
   const mobileToggleRef = useRef<HTMLButtonElement>(null);
-  const tabletMoreRef = useRef<HTMLButtonElement>(null);
+  const wideMoreRef = useRef<HTMLButtonElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
@@ -95,17 +94,14 @@ function Navbar() {
   }, [menuOpen]);
 
   useEffect(() => {
-    const tablet = window.matchMedia("(min-width: 768px)");
-    const desktop = window.matchMedia("(min-width: 1024px)");
+    const wide = window.matchMedia("(min-width: 768px)");
     const closeOnResize = () => {
       setMenuOpen(false);
       setMoreOpen(false);
     };
-    tablet.addEventListener("change", closeOnResize);
-    desktop.addEventListener("change", closeOnResize);
+    wide.addEventListener("change", closeOnResize);
     return () => {
-      tablet.removeEventListener("change", closeOnResize);
-      desktop.removeEventListener("change", closeOnResize);
+      wide.removeEventListener("change", closeOnResize);
     };
   }, []);
 
@@ -116,7 +112,7 @@ function Navbar() {
       setMenuOpen(false);
       setMoreOpen(false);
       if (menuOpen) mobileToggleRef.current?.focus();
-      else tabletMoreRef.current?.focus();
+      else wideMoreRef.current?.focus();
     };
     window.addEventListener("keydown", handleEscape);
     return () => window.removeEventListener("keydown", handleEscape);
@@ -175,6 +171,7 @@ function Navbar() {
           onClick={closeMenus}
           className="group flex shrink-0 items-center gap-4 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
           aria-label="Jayden Pillay - Home"
+          aria-current={isActive("#home") ? "location" : undefined}
         >
           <img
             src={jpLogo}
@@ -195,13 +192,62 @@ function Navbar() {
           </span>
         </a>
 
-        {/* Desktop navigation */}
-        <div className="ml-auto hidden items-center gap-4 lg:flex xl:gap-6 2xl:gap-7">
-          {navLinks.map((link) => (
+        <div className="ml-auto hidden items-center gap-3 md:flex lg:gap-5 xl:gap-7">
+          {widePrimaryLinks.map((link) => (
             <div key={link.href} className="group relative">
               {renderNavLink(link)}
             </div>
           ))}
+
+          <div
+            className="relative"
+            onBlur={(event) => {
+              if (!event.currentTarget.contains(event.relatedTarget)) setMoreOpen(false);
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => setMoreOpen((open) => !open)}
+              aria-expanded={moreOpen}
+              aria-controls="navbar-more-menu"
+              ref={wideMoreRef}
+              className={[
+                "inline-flex min-h-11 items-center gap-1.5 rounded-lg px-3 py-2",
+                "text-sm font-medium transition-colors",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400",
+                moreOpen || mobileMoreLinks.some(({ href }) => isActive(href))
+                  ? "bg-white/[0.06] text-cyan-300"
+                  : "text-slate-300 hover:text-white",
+              ].join(" ")}
+            >
+              More
+              <svg
+                className={[
+                  "h-4 w-4 transition-transform duration-200",
+                  moreOpen ? "rotate-180" : "",
+                ].join(" ")}
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                aria-hidden="true"
+              >
+                <path
+                  d="m7 10 5 5 5-5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+
+            <div
+              id="navbar-more-menu"
+              hidden={!moreOpen}
+              className="absolute right-0 top-[calc(100%+14px)] w-56 rounded-2xl border border-white/10 bg-[#10243b] p-2 shadow-2xl shadow-black/30"
+            >
+              {mobileMoreLinks.map((link) => renderNavLink(link, true))}
+            </div>
+          </div>
         </div>
 
         <a
@@ -218,63 +264,7 @@ function Navbar() {
           />
         </a>
 
-        {/* Mobile and tablet navigation controls */}
-        <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-3 lg:hidden">
-          {/* Mobile/tablet: primary links and More menu */}
-          <div className="hidden items-center gap-3 md:flex lg:hidden">
-            {tabletPrimaryLinks.map((link) => (
-              <div key={link.href} className="group relative">
-                {renderNavLink(link)}
-              </div>
-            ))}
-
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => setMoreOpen((open) => !open)}
-                aria-expanded={moreOpen}
-                aria-controls="navbar-more-menu"
-                ref={tabletMoreRef}
-                className={[
-                  "inline-flex items-center gap-1.5 rounded-lg px-3 py-2",
-                  "text-sm font-medium transition-colors",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400",
-                  moreOpen || tabletMoreLinks.some(({ href }) => isActive(href))
-                    ? "bg-white/[0.06] text-cyan-300"
-                    : "text-slate-300 hover:text-white",
-                ].join(" ")}
-              >
-                More
-                <svg
-                  className={[
-                    "h-4 w-4 transition-transform duration-200",
-                    moreOpen ? "rotate-180" : "",
-                  ].join(" ")}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="m7 10 5 5 5-5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </button>
-
-              {moreOpen && (
-                <div
-                  id="navbar-more-menu"
-                  className="absolute right-0 top-[calc(100%+14px)] w-56 rounded-2xl border border-white/10 bg-[#10243b] p-2 shadow-2xl shadow-black/30"
-                >
-                  {tabletMoreLinks.map((link) => renderNavLink(link, true))}
-                </div>
-              )}
-            </div>
-          </div>
-
+        <div className="ml-auto flex shrink-0 md:hidden">
           {/* Compact mobile menu */}
           <button
             type="button"

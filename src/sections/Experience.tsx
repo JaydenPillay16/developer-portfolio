@@ -72,10 +72,6 @@ function Experience() {
           >
             Professional experience
           </h2>
-          <p className="mt-5 max-w-3xl text-base leading-7 text-[#30455d] sm:mt-6 sm:text-lg sm:leading-8">
-            Growing through different roles, building practical experience,
-            and contributing to technology solutions for enterprise needs.
-          </p>
         </motion.header>
 
         <div data-scroll-career className="relative ml-[5px] border-l border-[#9bb8da] sm:ml-[6px]">

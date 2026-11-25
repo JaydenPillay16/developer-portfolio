@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import jpLogo from "../assets/jp-monogram.png";
 
 import {
@@ -19,7 +19,16 @@ type FormData = {
 
 type ContactField = "name" | "email" | "message";
 type FieldErrors = Partial<Record<ContactField, string>>;
-type SubmissionStatus = "" | "success" | "error" | "validation";
+type DeliveryFailure = "offline" | "rateLimit" | "unconfirmed" | "error";
+type SubmissionStatus = "" | "success" | "validation" | DeliveryFailure;
+
+const linkedInUrl = "https://www.linkedin.com/in/jayden-pillay-44947a261/";
+const deliveryMessages: Record<DeliveryFailure, string> = {
+  offline: "You’re offline. Reconnect and try again.",
+  rateLimit: "Too many attempts. Wait a moment before trying again.",
+  unconfirmed: "I couldn’t confirm delivery. If you’re unsure whether it arrived, follow up on LinkedIn.",
+  error: "Your message couldn’t be sent. Try again or contact me on LinkedIn.",
+};
 
 const currentYear = new Date().getFullYear();
 
@@ -34,6 +43,8 @@ function Contact() {
   const [status, setStatus] = useState<SubmissionStatus>("");
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [isSending, setIsSending] = useState(false);
+  const sendingRef = useRef(false);
+  const deliveryFailure = status && status !== "success" && status !== "validation" ? status : null;
 
   function handleChange(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -49,7 +60,7 @@ function Contact() {
       setFieldErrors((previous) => ({ ...previous, [name]: undefined }));
     }
 
-    if (status) {
+    if (status === "success" || status === "validation") {
       setStatus("");
     }
   }
@@ -57,7 +68,7 @@ function Contact() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (isSending) return;
+    if (sendingRef.current) return;
 
     const nextErrors: FieldErrors = {};
     if (!formData.name.trim()) {
@@ -90,12 +101,20 @@ function Contact() {
       return;
     }
 
+    if (!navigator.onLine) {
+      setStatus("offline");
+      return;
+    }
+
+    sendingRef.current = true;
     setIsSending(true);
     setStatus("");
 
+    let timeout: number | undefined;
+    const deliveryTimeout = new Error("Delivery confirmation timed out");
     try {
       const { default: emailjs } = await import("@emailjs/browser");
-      await emailjs.send(
+      const delivery = emailjs.send(
         EMAILJS_SERVICE_ID,
         EMAILJS_TEMPLATE_ID,
         {
@@ -106,6 +125,12 @@ function Contact() {
         },
         EMAILJS_PUBLIC_KEY,
       );
+      await Promise.race([
+        delivery,
+        new Promise<never>((_, reject) => {
+          timeout = window.setTimeout(() => reject(deliveryTimeout), 15_000);
+        }),
+      ]);
 
       setStatus("success");
       setFieldErrors({});
@@ -117,9 +142,14 @@ function Contact() {
         message: "",
       });
     } catch (error) {
-      console.error("EmailJS submission failed:", error);
-      setStatus("error");
+      if (!navigator.onLine) setStatus("offline");
+      else if (error === deliveryTimeout) setStatus("unconfirmed");
+      else if (typeof error === "object" && error !== null && "status" in error && error.status === 429) {
+        setStatus("rateLimit");
+      } else setStatus("error");
     } finally {
+      window.clearTimeout(timeout);
+      sendingRef.current = false;
       setIsSending(false);
     }
   }
@@ -173,7 +203,7 @@ function Contact() {
               </a>
 
               <a
-                href="https://www.linkedin.com/in/jayden-pillay-44947a261/"
+                href={linkedInUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Visit my LinkedIn profile"
@@ -212,6 +242,7 @@ function Contact() {
                     placeholder="John Smith"
                     value={formData.name}
                     onChange={handleChange}
+                  readOnly={isSending}
                     className={`${inputClass} aria-invalid:border-red-700`}
                     aria-invalid={fieldErrors.name ? true : undefined}
                     aria-describedby={fieldErrors.name ? "contact-name-error" : undefined}
@@ -241,6 +272,7 @@ function Contact() {
                     placeholder="john@company.com"
                     value={formData.email}
                     onChange={handleChange}
+                  readOnly={isSending}
                     className={`${inputClass} aria-invalid:border-red-700`}
                     aria-invalid={fieldErrors.email ? true : undefined}
                     aria-describedby={fieldErrors.email ? "contact-email-error" : undefined}
@@ -275,6 +307,7 @@ function Contact() {
                   placeholder="Your company or organisation"
                   value={formData.company}
                   onChange={handleChange}
+                  readOnly={isSending}
                   className={inputClass}
                   maxLength={150}
                 />
@@ -288,6 +321,9 @@ function Contact() {
                 >
                   Your message <span className="text-[#1555bf]">*</span>
                 </label>
+                <p id="contact-message-hint" className="mb-2 text-sm text-[#52677d]">
+                  Use at least 10 characters.
+                </p>
 
                 <textarea
                   id="contact-message"
@@ -296,9 +332,10 @@ function Contact() {
                   placeholder="Tell me about your opportunity, project, or idea..."
                   value={formData.message}
                   onChange={handleChange}
+                  readOnly={isSending}
                   className={`${inputClass} min-h-36 resize-y aria-invalid:border-red-700`}
                   aria-invalid={fieldErrors.message ? true : undefined}
-                  aria-describedby={fieldErrors.message ? "contact-message-error" : undefined}
+                  aria-describedby={fieldErrors.message ? "contact-message-error" : "contact-message-hint"}
                   required
                   minLength={10}
                   maxLength={3000}
@@ -315,24 +352,27 @@ function Contact() {
                 </p>
               </div>
 
-              {/* Success and error messages */}
-              {status && (
-                <p
-                  role="status"
-                  aria-live="polite"
-                  className={`rounded-xl border px-4 py-3 text-sm leading-6 ${
-                    status === "success"
-                      ? "border-emerald-300 bg-emerald-50 text-emerald-900"
-                      : "border-red-200 bg-red-50 text-red-900"
-                  }`}
-                >
+              <div className={status ? `rounded-xl border px-4 py-3 text-sm leading-6 ${
+                status === "success"
+                  ? "border-emerald-300 bg-emerald-50 text-emerald-900"
+                  : "border-red-200 bg-red-50 text-red-900"
+              }` : "sr-only"}>
+                <p role="status">
                   {status === "success"
-                    ? "Your message has been sent successfully! Thanks for reaching out."
+                    ? "Message sent. Thanks for reaching out."
                     : status === "validation"
-                      ? "Please correct the highlighted fields, then submit again."
-                      : "Sorry, your message couldn't be sent. Please try again in a moment."}
+                      ? "Please correct the highlighted fields, then try again."
+                      : deliveryFailure
+                        ? `${deliveryMessages[deliveryFailure]} Your draft is still here.`
+                        : isSending ? "Sending your message." : ""}
                 </p>
-              )}
+                {deliveryFailure && (
+                  <a href={linkedInUrl} target="_blank" rel="noreferrer"
+                    className="mt-1 inline-flex min-h-11 items-center font-semibold underline underline-offset-4">
+                    Contact me on LinkedIn (opens in a new tab)
+                  </a>
+                )}
+              </div>
 
               {/* Submit button */}
               <button
@@ -350,7 +390,7 @@ function Contact() {
                   </>
                 ) : (
                   <>
-                    {status === "success" ? "Message sent!" : "Send message"}
+                    {deliveryFailure ? "Try again" : "Send message"}
                     <Send aria-hidden="true" className="size-4" strokeWidth={1.8} />
                   </>
                 )}

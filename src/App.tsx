@@ -71,8 +71,8 @@ function App() {
             <path fill="none" stroke="#3d82f8" strokeWidth="2" strokeLinecap="round" />
           </svg>
           <Skills />
-          <Experience />
           <Projects />
+          <Experience />
           <Education />
           <Certifications />
           <Contact />
