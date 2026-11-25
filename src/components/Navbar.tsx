@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
+import { createPortal } from "react-dom";
 import { Mail } from "lucide-react";
 import jpLogo from "../assets/jp-monogram.png";
 
@@ -16,6 +17,7 @@ const contactHref = "#contact";
 const mobilePrimaryLinks = navLinks.slice(0, 4);
 const mobileMoreLinks = navLinks.slice(4);
 const widePrimaryLinks = mobilePrimaryLinks.slice(1);
+const transitionRows = Array.from({ length: 12 }, (_, index) => index);
 
 function Navbar() {
   const navRef = useRef<HTMLElement>(null);
@@ -24,6 +26,19 @@ function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
+  const transitionRef = useRef<HTMLDivElement>(null);
+  const transitionTimeline = useRef<ReturnType<typeof import("gsap").gsap.timeline> | null>(null);
+  const transitioning = useRef(false);
+  const mounted = useRef(true);
+
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      transitionTimeline.current?.kill();
+      transitioning.current = false;
+    };
+  }, []);
 
   useEffect(() => {
     const sections = [...navLinks.map(({ href }) => href), contactHref]
@@ -123,6 +138,44 @@ function Navbar() {
     setMoreOpen(false);
   };
 
+  const handleNavigation = (event: MouseEvent<HTMLAnchorElement>, href: string) => {
+    closeMenus();
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const target = document.getElementById(href.slice(1));
+    const overlay = transitionRef.current;
+    if (!target || !overlay) return;
+    event.preventDefault();
+    if (transitioning.current) return;
+    transitioning.current = true;
+
+    const navigate = () => {
+      if (window.location.hash !== href) window.history.pushState(null, "", href);
+      target.scrollIntoView({ behavior: "instant", block: "start" });
+      setActiveSection(target.id);
+    };
+
+    void import("gsap").then(({ gsap }) => {
+      if (!mounted.current) return;
+      const rows = overlay.querySelectorAll<HTMLElement>("[data-transition-row]");
+      gsap.set(overlay, { autoAlpha: 1, pointerEvents: "auto" });
+      gsap.set(rows, { xPercent: -105 });
+      transitionTimeline.current = gsap.timeline({
+        onComplete: () => {
+          gsap.set(overlay, { autoAlpha: 0, pointerEvents: "none" });
+          transitioning.current = false;
+          transitionTimeline.current = null;
+        },
+      })
+        .to(rows, { xPercent: 0, duration: 0.43, stagger: 0.035, ease: "power3.inOut" })
+        .call(navigate)
+        .to(rows, { xPercent: 105, duration: 0.48, stagger: 0.035, ease: "power3.inOut" }, "+=0.08");
+    }).catch(() => {
+      if (mounted.current) navigate();
+      transitioning.current = false;
+    });
+  };
+
   const isActive = (href: string) => activeSection === href.slice(1);
   const contactActive = isActive(contactHref);
 
@@ -134,7 +187,7 @@ function Navbar() {
         key={link.href}
         href={link.href}
         aria-current={active ? "location" : undefined}
-        onClick={closeMenus}
+        onClick={(event) => handleNavigation(event, link.href)}
         className={[
           "relative flex items-center justify-between gap-3 rounded-sm transition-colors",
           "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-300",
@@ -168,7 +221,7 @@ function Navbar() {
         {/* Brand: custom JP logo */}
         <a
           href="#home"
-          onClick={closeMenus}
+          onClick={(event) => handleNavigation(event, "#home")}
           className="group flex shrink-0 items-center gap-4 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
           aria-label="Jayden Pillay - Home"
           aria-current={isActive("#home") ? "location" : undefined}
@@ -252,7 +305,7 @@ function Navbar() {
 
         <a
           href={contactHref}
-          onClick={closeMenus}
+          onClick={(event) => handleNavigation(event, contactHref)}
           aria-current={contactActive ? "location" : undefined}
           className="ml-4 hidden min-h-11 shrink-0 items-center gap-3 rounded-[5px] border border-blue-300/25 bg-[#1659cd] aria-[current=location]:border-[#b9d6ff] aria-[current=location]:ring-2 aria-[current=location]:ring-[#74aaff] px-4 text-sm font-bold text-white shadow-[0_4px_0_#1748a7] transition-[transform,background-color,box-shadow] hover:-translate-y-0.5 hover:bg-[#3980ff] hover:shadow-[0_4px_0_#1748a7,0_8px_22px_rgba(40,117,255,0.2)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080b20] md:inline-flex"
         >
@@ -366,7 +419,7 @@ function Navbar() {
             <a
               href={contactHref}
               aria-current={contactActive ? "location" : undefined}
-              onClick={closeMenus}
+              onClick={(event) => handleNavigation(event, contactHref)}
               className="mt-3 inline-flex min-h-12 items-center justify-between gap-5 rounded-[5px] border border-blue-300/25 bg-[#1659cd] aria-[current=location]:border-[#b9d6ff] aria-[current=location]:ring-2 aria-[current=location]:ring-[#74aaff] px-4 py-3 text-sm font-bold text-white shadow-[0_4px_0_#1748a7] transition-[transform,background-color,box-shadow] hover:-translate-y-0.5 hover:bg-[#3980ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300"
             >
               Get in Touch
@@ -379,6 +432,23 @@ function Navbar() {
           </div>
         </div>
       </div>
+      {createPortal(
+        <div
+          ref={transitionRef}
+          aria-hidden="true"
+          className="pointer-events-none invisible fixed inset-0 z-[100] grid opacity-0"
+          style={{ gridTemplateRows: "repeat(12, minmax(0, 1fr))" }}
+        >
+          {transitionRows.map((row) => (
+            <span
+              key={row}
+              data-transition-row
+              className="block h-full w-full bg-[#091a2e]"
+            />
+          ))}
+        </div>,
+        document.body,
+      )}
     </header>
   );
 }

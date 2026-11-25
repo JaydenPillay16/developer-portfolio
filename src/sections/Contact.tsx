@@ -7,7 +7,7 @@ import {
   EMAILJS_TEMPLATE_ID,
 } from "../components/config/contact";
 
-import { Send } from "lucide-react";
+import ContactSubmitButton from "../components/ContactSubmitButton";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 
 type FormData = {
@@ -375,26 +375,11 @@ function Contact() {
               </div>
 
               {/* Submit button */}
-              <button
-                type="submit"
-                disabled={isSending}
-                className="inline-flex min-h-[54px] w-full items-center justify-between gap-5 rounded-[5px] bg-[#1659cd] px-5 py-3 font-bold text-white shadow-[0_4px_0_#0e3c8d] transition-colors hover:bg-[#1049ac] active:translate-y-px disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
-              >
-                {isSending ? (
-                  <>
-                    <span
-                      aria-hidden="true"
-                      className="h-4 w-4 motion-safe:animate-spin rounded-full border-2 border-white/30 border-t-white"
-                    />
-                    Sending message...
-                  </>
-                ) : (
-                  <>
-                    {deliveryFailure ? "Try again" : "Send message"}
-                    <Send aria-hidden="true" className="size-4" strokeWidth={1.8} />
-                  </>
-                )}
-              </button>
+              <ContactSubmitButton
+                state={isSending ? "pending" : status === "success" ? "success" : status ? "error" : "idle"}
+                retry={Boolean(deliveryFailure)}
+                validationError={status === "validation"}
+              />
 
               <p className="text-xs leading-5 text-[#52677d]">
                 Your details will be used to respond to your enquiry.
