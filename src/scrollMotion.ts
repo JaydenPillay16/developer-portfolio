@@ -1,5 +1,6 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { installSectionHandoff } from "./sectionHandoffs";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -79,6 +80,7 @@ export function installScrollMotion(main: HTMLElement, progress: HTMLElement) {
     ({ conditions }) => {
       if (!conditions?.motionAllowed) return;
       const removeHandoff = conditions.desktop ? installHeroHandoff(main) : undefined;
+      const removeSectionHandoffs: (() => void)[] = [];
 
       gsap.to(progress, {
         scaleX: 1,
@@ -87,6 +89,9 @@ export function installScrollMotion(main: HTMLElement, progress: HTMLElement) {
       });
 
       for (const section of main.querySelectorAll<HTMLElement>(":scope > section")) {
+        const remove = installSectionHandoff(section);
+        if (remove) removeSectionHandoffs.push(remove);
+
         const reveal = section.querySelectorAll("[data-scroll-reveal]");
         for (const element of reveal) {
           gsap.from(element, {
@@ -184,6 +189,7 @@ export function installScrollMotion(main: HTMLElement, progress: HTMLElement) {
       return () => {
         active = false;
         removeHandoff?.();
+        removeSectionHandoffs.forEach((remove) => remove());
         resizeObserver.disconnect();
         cancelAnimationFrame(frame);
       };

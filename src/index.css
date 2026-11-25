@@ -164,6 +164,85 @@ main > section.contact-section {
   visibility: hidden;
 }
 
+main > section:has(> .section-handoff) {
+  position: relative;
+}
+
+.section-handoff {
+  position: absolute;
+  inset: auto 0 100%;
+  z-index: 1;
+  height: clamp(24px, 5vw, 72px);
+  overflow: clip;
+  pointer-events: none;
+  --handoff-surface: #f3f7fc;
+  --handoff-tint: #dce9fa;
+}
+
+:is(#skills, #education, #certifications) > .section-handoff {
+  --handoff-surface: #091a2e;
+  --handoff-tint: #1c3e67;
+}
+
+.section-handoff--horizon {
+  inset: -1px 0 auto;
+  height: clamp(38px, 6vw, 82px);
+}
+
+.section-handoff--horizon > div {
+  position: absolute;
+  inset: -2px -5% auto;
+  height: calc(100% - 17px);
+  border-radius: 0 0 50% 50% / 0 0 100% 100%;
+  background: #07111f;
+  box-shadow: 0 2px 0 #9dc4ff, 0 5px 11px rgb(40 117 255 / 68%),
+    0 10px 16px rgb(40 117 255 / 28%);
+  transform-origin: center top;
+}
+
+.section-handoff--split {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  transform-origin: center bottom;
+}
+
+.section-handoff--split > div {
+  background: linear-gradient(180deg, var(--handoff-tint), var(--handoff-surface) 68%);
+}
+
+.section-handoff--pixels {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  align-items: end;
+  --handoff-surface: #edf3fa;
+  --pixel-unit: clamp(6px, 1.15vw, 16px);
+  height: calc(var(--pixel-unit) * 6);
+}
+
+.section-handoff--pixels > div {
+  position: relative;
+  height: calc(var(--pixel-unit) * var(--pixel-height));
+  background: var(--handoff-surface);
+  transform-origin: center bottom;
+}
+
+.section-handoff__pixel-accent::before {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  inset-inline-start: 25%;
+  width: var(--pixel-unit);
+  height: var(--pixel-unit);
+  background: #4386f2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-handoff {
+    display: none;
+  }
+}
+
 .portfolio-projects { background: #edf3fa; color: #0b1b30; background-image: none; }
 .home-hero-shade { background: linear-gradient(90deg, #07111f 0%, #07111f 28%, #07111fea 43%, #07111f4c 63%, transparent 80%); }
 
