@@ -230,7 +230,7 @@ function AboutHighlightCard({
             </motion.span>
 
             <span className="relative z-10 rounded-full border border-white/[0.08] bg-white/[0.025] px-3 py-1.5 font-mono text-[10px] tracking-[0.12em] text-slate-500 transition-colors duration-300 group-hover:border-white/[0.14] group-hover:text-slate-300">
-              {number} <span className="text-slate-600">/</span> 04
+              {number} <span className="text-slate-400">/</span> 04
             </span>
           </div>
 

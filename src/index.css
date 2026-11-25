@@ -1,7 +1,21 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "Space Grotesk";
+  src: url("/fonts/space-grotesk-latin-wght-normal.woff2") format("woff2");
+  font-weight: 300 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "DM Sans";
+  src: url("/fonts/dm-sans-latin-wght-normal.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
 :root {
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system,
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  font-family: "DM Sans", ui-sans-serif, system-ui, -apple-system,
     BlinkMacSystemFont, "Segoe UI", sans-serif;
 
   color: #f8fafc;
@@ -22,6 +36,15 @@
 
 * {
   box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Space Grotesk", "DM Sans", ui-sans-serif, system-ui, sans-serif;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -62,6 +85,101 @@ main > section {
   scroll-margin-top: 6rem;
 }
 
+main > section.about-section {
+  background-image: none;
+}
+
+main > section.experience-section {
+  background-image: none;
+}
+
+main > section.portfolio-projects,
+main > section.education-section,
+main > section.certifications-section,
+main > section.skills-section,
+main > section.contact-section {
+  background-image: none;
+}
+
+.skills-summary::-webkit-details-marker {
+  display: none;
+}
+
+.home-hero { height: 780px; background: #07111f; }
+
+.home-hero-photo {
+  position: absolute;
+  inset: 68px 0 0 auto;
+  z-index: 5;
+  width: 63%;
+  height: calc(100% - 68px);
+  object-fit: contain;
+  object-position: center bottom;
+  filter: brightness(1.075);
+}
+
+.home-hero-halo {
+  position: absolute;
+  top: 372px;
+  left: 69.3%;
+  z-index: 2;
+  width: min(46vw, 584px);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  pointer-events: none;
+}
+
+.home-hero-halo-light,
+.home-hero-halo canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.home-hero-halo-light {
+  background: linear-gradient(112deg, #122557 6%, #1546a7 47%, #2388f0 93%);
+  mask-image: radial-gradient(circle closest-side, #000 0 77%, #000d 84%, #0006 92%, transparent 100%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .home-hero-halo-light {
+    animation: cobalt-bloom 1.2s cubic-bezier(.19, 1, .22, 1) both;
+  }
+}
+
+@keyframes cobalt-bloom {
+  from { transform: scale(.62); opacity: .2; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.hero-about-arc {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 25;
+  width: 100%;
+  height: 1px;
+  overflow: visible;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.portfolio-projects { background: #edf3fa; color: #0b1b30; background-image: none; }
+.home-hero-shade { background: linear-gradient(90deg, #07111f 0%, #07111f 28%, #07111fea 43%, #07111f4c 63%, transparent 80%); }
+
+@media (max-width: 850px) {
+  .home-hero { align-items: flex-start; }
+  .home-hero-photo { top: auto; bottom: 0; width: 100%; height: 43%; }
+  .home-hero-halo { top: auto; bottom: 3%; left: 50%; width: min(65vw, 320px); translate: -50% 0; }
+  .home-hero-shade { background: linear-gradient(180deg, #07111f 0%, #07111fee 33%, #07111f80 55%, transparent 85%); }
+}
+
+@media (max-width: 600px) {
+  .home-hero { height: 760px; align-items: flex-start; padding-top: 115px; }
+  .home-hero-photo { height: min(45%, 83vw); }
+  .home-hero-halo { bottom: 3%; width: min(78vw, 300px); }
+}
+
 /* Keep muted copy legible on the dark surfaces used throughout the portfolio. */
 .text-slate-500 {
   color: #74839a;
@@ -86,13 +204,6 @@ a {
 
 button {
   cursor: pointer;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  body.has-custom-cursor,
-  body.has-custom-cursor * {
-    cursor: none !important;
-  }
 }
 
 ::selection {
@@ -120,59 +231,45 @@ button {
   }
 }
 
-/* Breathing glow around my pic */
-.portrait-glow {
-  animation: portrait-glow 6s ease-in-out infinite alternate;
-}
-
-@keyframes portrait-glow {
-  from {
-    opacity: 0.55;
-    transform: scale(0.98);
+/* Fine-pointer cursor treatment from the audit refresh design. */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  body,
+  body a,
+  body button,
+  body input,
+  body textarea {
+    cursor: none;
   }
 
-  to {
-    opacity: 1;
-    transform: scale(1.04);
-  }
-}
-
-/* SHINYYYYY EFFECTTTTTTT */
-.portrait-shimmer {
-  background: linear-gradient(
-    115deg,
-    transparent 25%,
-    rgba(255, 255, 255, 0.02) 38%,
-    rgba(255, 255, 255, 0.16) 48%,
-    rgba(147, 197, 253, 0.08) 53%,
-    transparent 65%
-  );
-
-  background-size: 250% 100%;
-  background-position: 100% 0;
-  animation: portrait-shimmer 7s ease-in-out infinite;
-}
-
-@keyframes portrait-shimmer {
-  0%,
-  55% {
-    background-position: 100% 0;
+  .cursor-ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #55c7ec;
+    border-radius: 50%;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    transition:
+      width 180ms ease,
+      height 180ms ease,
+      opacity 200ms ease,
+      border-color 180ms ease;
+    will-change: transform;
   }
 
-  85%,
-  100% {
-    background-position: -100% 0;
+  .cursor-ring.is-visible {
+    opacity: 0.8;
+  }
+
+  .cursor-ring.is-link {
+    width: 46px;
+    height: 46px;
+    border-color: #91bcff;
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .portrait-glow,
-  .portrait-shimmer {
-    animation: none;
-  }
-
-  .portrait-card,
-  .portrait-card img {
-    transition: none;
-  }
-}
+\n

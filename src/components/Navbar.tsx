@@ -1,101 +1,126 @@
 import { useEffect, useRef, useState } from "react";
-import jpLogo from "../assets/Jp-logo-no-background.png";
+import { Mail } from "lucide-react";
+import jpLogo from "../assets/jp-monogram.png";
 
 const navLinks = [
+  { label: "Home", href: "#home" },
   { label: "About", href: "#about" },
+  { label: "Skills", href: "#skills" },
   { label: "Experience", href: "#experience" },
-  { label: "Skills", href: "#technologies" },
   { label: "Projects", href: "#projects" },
   { label: "Education", href: "#education" },
   { label: "Certifications", href: "#certifications" },
-  { label: "Contact", href: "#contact" },
 ];
 
-const mobilePrimaryLinks = navLinks.slice(0, 3);
-const mobileMoreLinks = navLinks.slice(3);
+const contactHref = "#contact";
+const mobilePrimaryLinks = navLinks.slice(0, 4);
+const mobileMoreLinks = navLinks.slice(4);
+const tabletPrimaryLinks = navLinks.slice(0, 3);
+const tabletMoreLinks = navLinks.slice(3);
 
 function Navbar() {
-  const [shimmerSection, setShimmerSection] = useState<string | null>(null);
-  const clickedSectionRef = useRef<string | null>(null);
-  const scrollTimeoutRef = useRef<number | null>(null);
+  const navRef = useRef<HTMLElement>(null);
+  const mobileToggleRef = useRef<HTMLButtonElement>(null);
+  const tabletMoreRef = useRef<HTMLButtonElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
-  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const updateScrollState = () => {
-      setScrolled(window.scrollY > 16);
-    };
-
-    updateScrollState();
-    window.addEventListener("scroll", updateScrollState, { passive: true });
-
-    return () => {
-      window.removeEventListener("scroll", updateScrollState);
-    };
-  }, []);
-
-  useEffect(() => {
-    const sectionIds = ["home", ...navLinks.map((link) => link.href.slice(1))];
-
-    const sections = sectionIds
-      .map((id) => document.getElementById(id))
-      .filter((section): section is HTMLElement => section !== null);
+    const sections = [...navLinks.map(({ href }) => href), contactHref]
+      .map((href) => document.getElementById(href.slice(1)))
+      .filter((element): element is HTMLElement => element !== null);
 
     if (!sections.length) return;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visibleSections = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+    let currentId = "";
+    let frame = 0;
+    let positions: { id: string; top: number }[] = [];
+    let marker = 0;
+    let scrollEnd = 0;
 
-        if (visibleSections[0] && !clickedSectionRef.current) {
-          setActiveSection(visibleSections[0].target.id);
-        }
-      },
-      {
-        rootMargin: "-20% 0px -60% 0px",
-        threshold: [0, 0.1, 0.25, 0.5, 0.75],
-      },
-    );
+    const update = () => {
+      frame = 0;
+      const scroll = window.scrollY;
+      const position = scroll + marker;
+      const current = scrollEnd > 0 && scroll >= scrollEnd - 2
+        ? positions.at(-1)
+        : positions.findLast(({ top }) => top <= position) ?? positions[0];
 
+      if (current && current.id !== currentId) {
+        currentId = current.id;
+        setActiveSection(current.id);
+      }
+    };
+
+    const scheduleUpdate = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+
+    const measure = () => {
+      const scroll = window.scrollY;
+      positions = sections
+        .map((section) => ({ id: section.id, top: section.getBoundingClientRect().top + scroll }))
+        .sort((a, b) => a.top - b.top);
+      marker = Math.min(
+        Math.max((navRef.current?.offsetHeight ?? 76) + 16, window.innerHeight * 0.28),
+        window.innerHeight - 1,
+      );
+      scrollEnd = document.documentElement.scrollHeight - window.innerHeight;
+      scheduleUpdate();
+    };
+
+    measure();
+    const observer = new ResizeObserver(measure);
     sections.forEach((section) => observer.observe(section));
+    const main = document.getElementById("main-content");
+    if (main) observer.observe(main);
 
-    return () => observer.disconnect();
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", measure);
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+      window.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", measure);
+    };
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? "hidden" : "";
+    if (!menuOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
 
-    return () => {
-      document.body.style.overflow = "";
-    };
+    return () => { document.body.style.overflow = previousOverflow; };
   }, [menuOpen]);
 
   useEffect(() => {
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setMenuOpen(false);
-        setMoreOpen(false);
-      }
+    const tablet = window.matchMedia("(min-width: 768px)");
+    const desktop = window.matchMedia("(min-width: 1024px)");
+    const closeOnResize = () => {
+      setMenuOpen(false);
+      setMoreOpen(false);
     };
-
-    window.addEventListener("keydown", handleEscape);
-
+    tablet.addEventListener("change", closeOnResize);
+    desktop.addEventListener("change", closeOnResize);
     return () => {
-      window.removeEventListener("keydown", handleEscape);
+      tablet.removeEventListener("change", closeOnResize);
+      desktop.removeEventListener("change", closeOnResize);
     };
   }, []);
 
   useEffect(() => {
-    return () => {
-      if (scrollTimeoutRef.current !== null) {
-        window.clearTimeout(scrollTimeoutRef.current);
-      }
+    if (!menuOpen && !moreOpen) return;
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      setMenuOpen(false);
+      setMoreOpen(false);
+      if (menuOpen) mobileToggleRef.current?.focus();
+      else tabletMoreRef.current?.focus();
     };
-  }, []);
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [menuOpen, moreOpen]);
 
   const closeMenus = () => {
     setMenuOpen(false);
@@ -103,135 +128,75 @@ function Navbar() {
   };
 
   const isActive = (href: string) => activeSection === href.slice(1);
+  const contactActive = isActive(contactHref);
 
   const renderNavLink = (link: (typeof navLinks)[number], mobile = false) => {
-    const sectionId = link.href.slice(1);
     const active = isActive(link.href);
-    const shimmering = active && shimmerSection === sectionId;
 
     return (
       <a
         key={link.href}
         href={link.href}
         aria-current={active ? "location" : undefined}
-        onClick={() => {
-          setActiveSection(sectionId);
-          setShimmerSection(sectionId);
-
-          window.setTimeout(() => {
-            setShimmerSection((current) =>
-              current === sectionId ? null : current,
-            );
-          }, 650);
-
-          clickedSectionRef.current = sectionId;
-          closeMenus();
-
-          if (scrollTimeoutRef.current !== null) {
-            window.clearTimeout(scrollTimeoutRef.current);
-          }
-
-          scrollTimeoutRef.current = window.setTimeout(() => {
-            clickedSectionRef.current = null;
-            scrollTimeoutRef.current = null;
-          }, 1000);
-        }}
+        onClick={closeMenus}
         className={[
-          "relative flex items-center justify-between gap-3",
-          mobile
-            ? "w-full rounded-xl px-4 py-3 text-sm font-medium transition-colors duration-200"
-            : "whitespace-nowrap py-2 text-[13px] font-medium transition-all duration-300 ease-out",
-          "focus-visible:outline-none focus-visible:ring-2",
-          "focus-visible:ring-cyan-400 focus-visible:ring-offset-2",
-          "focus-visible:ring-offset-[#080b20]",
+          "relative flex items-center justify-between gap-3 rounded-sm transition-colors",
+          "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-300",
+          mobile ? "w-full px-4 py-3 text-sm font-medium" : "whitespace-nowrap py-2 text-[13px] font-medium",
           active
-            ? mobile
-              ? "bg-cyan-400/[0.08] text-cyan-200"
-              : "text-cyan-200 drop-shadow-[0_0_8px_rgba(103,232,249,0.3)]"
-            : mobile
-              ? "text-slate-300 hover:bg-white/[0.04] hover:text-white"
-              : "text-slate-400 hover:text-cyan-200 hover:drop-shadow-[0_0_10px_rgba(103,232,249,0.65)] hover:-translate-y-0.5",
+            ? mobile ? "bg-[#173451] text-[#b9d6ff]!" : "text-[#b9d6ff]!"
+            : mobile ? "text-slate-300! hover:bg-white/[0.06] hover:text-white!" : "text-slate-300! hover:text-white!",
         ].join(" ")}
       >
         <span>{link.label}</span>
-
-        {mobile ? (
-          <span
-            className={[
-              "h-1.5 w-1.5 shrink-0 rounded-full transition-colors duration-200",
-              active
-                ? "bg-cyan-300 shadow-[0_0_8px_rgba(103,232,249,0.6)]"
-                : "bg-transparent group-hover:bg-slate-500",
-            ].join(" ")}
-            aria-hidden="true"
-          />
-        ) : (
-          <span
-            className={[
-              "absolute inset-x-0 -bottom-[1px] h-[2px] origin-center",
-              "rounded-full bg-gradient-to-r from-cyan-400 via-blue-400 to-violet-400",
-              "transition-all duration-300 ease-out",
-              active
-                ? "scale-x-100 opacity-100 shadow-[0_0_10px_rgba(103,232,249,0.65)]"
-                : "scale-x-0 opacity-70 group-hover:scale-x-75 group-hover:opacity-100 group-hover:shadow-[0_0_8px_rgba(103,232,249,0.4)]",
-              shimmering ? "animate-pulse" : "",
-            ].join(" ")}
-            aria-hidden="true"
-          />
-        )}
+        <span
+          aria-hidden="true"
+          className={[
+            "pointer-events-none bg-[#74aaff]",
+            mobile
+              ? `h-0.5 w-4 shrink-0 ${active ? "opacity-100" : "opacity-0"}`
+              : `absolute inset-x-0 -bottom-0.5 h-0.5 origin-left transition-[transform,opacity] duration-200 motion-reduce:transition-none ${active ? "scale-x-100 opacity-100" : "scale-x-0 opacity-0"}`,
+          ].join(" ")}
+        />
       </a>
     );
   };
 
   return (
-    <header
-      className={[
-        "fixed inset-x-0 top-0 z-50",
-        "border-b border-white/[0.08]",
-        "bg-[#080b20]/75 backdrop-blur-2xl",
-        "transition-[background-color,box-shadow,border-color] duration-300",
-        scrolled
-          ? "border-white/[0.12] bg-[#080b20]/90 shadow-lg shadow-black/10"
-          : "shadow-none",
-      ].join(" ")}
-    >
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/12 bg-[#091a2e]">
       <nav
+        ref={navRef}
         className="mx-auto flex min-h-[76px] max-w-[1440px] items-center justify-between gap-4 px-5 sm:px-8 xl:px-12"
         aria-label="Main navigation"
       >
         {/* Brand: custom JP logo */}
         <a
           href="#home"
-          onClick={() => {
-            closeMenus();
-            setActiveSection("home");
-            clickedSectionRef.current = null;
-          }}
-          className="group flex shrink-0 items-center gap-3 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+          onClick={closeMenus}
+          className="group flex shrink-0 items-center gap-4 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
           aria-label="Jayden Pillay - Home"
         >
-          <span className="relative flex h-11 w-12 shrink-0 items-center justify-center overflow-hidden rounded-[14px] border border-cyan-200/30 bg-[#0b1026] shadow-[0_0_18px_rgba(59,130,246,0.14)] transition-[transform,border-color,box-shadow] duration-300 group-hover:scale-105 group-hover:border-cyan-200/55 group-hover:shadow-[0_0_24px_rgba(59,130,246,0.26)] after:pointer-events-none after:absolute after:inset-[3px] after:rounded-[10px] after:border after:border-violet-300/25 after:content-['']">
-            <img
-              src={jpLogo}
-              alt=""
-              aria-hidden="true"
-              className="h-full w-full rounded-[11px] object-cover transition-all duration-300 group-hover:drop-shadow-[0_0_8px_rgba(103,232,249,0.3)]"
-            />
-          </span>
+          <img
+            src={jpLogo}
+            alt=""
+            aria-hidden="true"
+            className="h-10 w-14 shrink-0 object-contain transition-transform duration-200 group-hover:scale-[1.04]"
+          />
+          <span aria-hidden="true" className="h-9 w-px bg-white/45" />
 
           <span className="flex flex-col">
             <span className="text-sm font-semibold tracking-wide text-white sm:text-[15px]">
               Jayden Pillay
             </span>
 
-            <span className="mt-1 bg-gradient-to-r from-cyan-300 via-blue-400 to-violet-400 bg-clip-text text-[9px] font-semibold tracking-[0.19em] text-transparent sm:text-[10px]">
+            <span className="mt-1 text-[9px] font-semibold tracking-[0.19em] text-blue-300 sm:text-[10px]">
               SOFTWARE ENGINEER
             </span>
           </span>
         </a>
 
-        {/* Desktop navigation: shifted right */}
-        <div className="ml-auto hidden translate-x-2 items-center gap-5 lg:flex xl:translate-x-4 xl:gap-6 2xl:translate-x-5 2xl:gap-7">
+        {/* Desktop navigation */}
+        <div className="ml-auto hidden items-center gap-4 lg:flex xl:gap-6 2xl:gap-7">
           {navLinks.map((link) => (
             <div key={link.href} className="group relative">
               {renderNavLink(link)}
@@ -239,11 +204,25 @@ function Navbar() {
           ))}
         </div>
 
+        <a
+          href={contactHref}
+          onClick={closeMenus}
+          aria-current={contactActive ? "location" : undefined}
+          className="ml-4 hidden min-h-11 shrink-0 items-center gap-3 rounded-[5px] border border-blue-300/25 bg-[#1659cd] aria-[current=location]:border-[#b9d6ff] aria-[current=location]:ring-2 aria-[current=location]:ring-[#74aaff] px-4 text-sm font-bold text-white shadow-[0_4px_0_#1748a7] transition-[transform,background-color,box-shadow] hover:-translate-y-0.5 hover:bg-[#3980ff] hover:shadow-[0_4px_0_#1748a7,0_8px_22px_rgba(40,117,255,0.2)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#080b20] md:inline-flex"
+        >
+          Get in Touch
+          <Mail
+            aria-hidden="true"
+            className="h-4 w-4 shrink-0"
+            strokeWidth={1.8}
+          />
+        </a>
+
         {/* Mobile and tablet navigation controls */}
         <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-3 lg:hidden">
           {/* Mobile/tablet: primary links and More menu */}
           <div className="hidden items-center gap-3 md:flex lg:hidden">
-            {mobilePrimaryLinks.slice(0, 2).map((link) => (
+            {tabletPrimaryLinks.map((link) => (
               <div key={link.href} className="group relative">
                 {renderNavLink(link)}
               </div>
@@ -255,11 +234,12 @@ function Navbar() {
                 onClick={() => setMoreOpen((open) => !open)}
                 aria-expanded={moreOpen}
                 aria-controls="navbar-more-menu"
+                ref={tabletMoreRef}
                 className={[
                   "inline-flex items-center gap-1.5 rounded-lg px-3 py-2",
                   "text-sm font-medium transition-colors",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400",
-                  moreOpen
+                  moreOpen || tabletMoreLinks.some(({ href }) => isActive(href))
                     ? "bg-white/[0.06] text-cyan-300"
                     : "text-slate-300 hover:text-white",
                 ].join(" ")}
@@ -287,9 +267,9 @@ function Navbar() {
               {moreOpen && (
                 <div
                   id="navbar-more-menu"
-                  className="absolute right-0 top-[calc(100%+14px)] w-56 rounded-2xl border border-white/10 bg-[#0d1428]/95 p-2 shadow-2xl shadow-black/30 backdrop-blur-2xl"
+                  className="absolute right-0 top-[calc(100%+14px)] w-56 rounded-2xl border border-white/10 bg-[#10243b] p-2 shadow-2xl shadow-black/30"
                 >
-                  {mobileMoreLinks.map((link) => renderNavLink(link, true))}
+                  {tabletMoreLinks.map((link) => renderNavLink(link, true))}
                 </div>
               )}
             </div>
@@ -299,7 +279,8 @@ function Navbar() {
           <button
             type="button"
             onClick={() => setMenuOpen((open) => !open)}
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-slate-200 transition-colors duration-200 hover:border-cyan-400/40 hover:bg-white/[0.06] hover:text-cyan-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 md:hidden"
+            ref={mobileToggleRef}
+            className="flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-slate-200 transition-colors duration-200 hover:border-cyan-400/40 hover:bg-white/[0.06] hover:text-cyan-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 md:hidden"
             aria-label={
               menuOpen ? "Close navigation menu" : "Open navigation menu"
             }
@@ -339,21 +320,8 @@ function Navbar() {
             : "pointer-events-none max-h-0 opacity-0",
         ].join(" ")}
       >
-        <div className="max-h-[80vh] overflow-y-auto bg-[#080b20]/95 px-5 py-4 backdrop-blur-2xl sm:px-8">
+        <div className="max-h-[80vh] overflow-y-auto bg-[#091a2e] px-5 py-4 sm:px-8">
           <div className="mx-auto flex max-w-7xl flex-col gap-1">
-            <a
-              href="#home"
-              onClick={() => {
-                closeMenus();
-                setActiveSection("home");
-                clickedSectionRef.current = null;
-              }}
-              className="mb-2 flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium text-slate-300 transition-colors hover:bg-white/[0.04] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
-            >
-              Home
-              <span className="text-xs text-slate-500">Top</span>
-            </a>
-
             {mobilePrimaryLinks.map((link) => renderNavLink(link, true))}
 
             <div className="my-3 h-px bg-white/[0.08]" />
@@ -361,7 +329,9 @@ function Navbar() {
             <button
               type="button"
               onClick={() => setMoreOpen((open) => !open)}
-              className="flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium text-slate-300 transition-colors hover:bg-white/[0.04] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+              className={`flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium transition-colors hover:bg-white/[0.04] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 ${
+                mobileMoreLinks.some(({ href }) => isActive(href)) ? "text-[#b9d6ff]" : "text-slate-300"
+              }`}
               aria-expanded={moreOpen}
               aria-controls="navbar-mobile-more"
             >
@@ -402,6 +372,20 @@ function Navbar() {
                 </div>
               </div>
             </div>
+
+            <a
+              href={contactHref}
+              aria-current={contactActive ? "location" : undefined}
+              onClick={closeMenus}
+              className="mt-3 inline-flex min-h-12 items-center justify-between gap-5 rounded-[5px] border border-blue-300/25 bg-[#1659cd] aria-[current=location]:border-[#b9d6ff] aria-[current=location]:ring-2 aria-[current=location]:ring-[#74aaff] px-4 py-3 text-sm font-bold text-white shadow-[0_4px_0_#1748a7] transition-[transform,background-color,box-shadow] hover:-translate-y-0.5 hover:bg-[#3980ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300"
+            >
+              Get in Touch
+              <Mail
+                aria-hidden="true"
+                className="h-4 w-4 shrink-0"
+                strokeWidth={1.8}
+              />
+            </a>
           </div>
         </div>
       </div>

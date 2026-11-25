@@ -2,8 +2,7 @@ import { motion, useReducedMotion } from "motion/react";
 
 const projects = [
   {
-    number: "01",
-    category: "CLOUD ENGINEERING",
+    category: "Cloud engineering",
     title: "Amazon Connect Contact Centre Solution",
     client: "ABSA Group",
     description:
@@ -16,12 +15,10 @@ const projects = [
       "JSON",
       "GitHub Actions",
     ],
-    accent: "from-blue-500 to-cyan-400",
     featured: true,
   },
   {
-    number: "02",
-    category: "ENTERPRISE SOFTWARE",
+    category: "Enterprise software",
     title: "Internal Document & Records Management System",
     client: "IRIS",
     description:
@@ -32,12 +29,9 @@ const projects = [
       "Power Automate",
       "Enterprise Workflows",
     ],
-    accent: "from-violet-500 to-purple-400",
-    featured: false,
   },
   {
-    number: "03",
-    category: "PROCESS AUTOMATION",
+    category: "Process automation",
     title: "Automated Quality Documentation",
     client: "AQD",
     description:
@@ -48,249 +42,220 @@ const projects = [
       "Workflow Automation",
       "Document Management",
     ],
-    accent: "from-fuchsia-500 to-pink-400",
-    featured: false,
   },
 ];
 
-const smoothEase = [0.22, 1, 0.36, 1] as const;
+const revealEase = [0.22, 1, 0.36, 1] as const;
+
+const signalRoutes = [
+  "M118 165H220",
+  "M220 165V92H324",
+  "M220 165V238H324",
+  "M420 92H493V165",
+  "M420 238H493V165",
+];
+
+function SystemMap() {
+  return (
+    <div className="relative min-w-0">
+      <div className="mb-4 flex items-center justify-between border-b border-white/20 pb-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#a8bdd5] sm:text-xs">
+        <span>System components</span>
+        <span>Amazon Connect / AWS</span>
+      </div>
+
+      <svg
+        data-scroll-system-map
+        viewBox="0 0 600 330"
+        role="img"
+        aria-label="Diagram of Amazon Connect, Amazon Lex, AWS, Terraform and GitHub Actions"
+        className="block h-auto w-full overflow-visible"
+      >
+        <defs>
+          <pattern
+            id="project-grid"
+            width="24"
+            height="24"
+            patternUnits="userSpaceOnUse"
+          >
+            <path d="M 24 0 L 0 0 0 24" fill="none" stroke="#9db4d0" strokeOpacity="0.1" strokeWidth="1" />
+          </pattern>
+        </defs>
+
+        <rect width="600" height="330" fill="url(#project-grid)" />
+
+        <g fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d={signalRoutes.join(" ")} stroke="#304d73" />
+          {signalRoutes.map((route) => (
+            <path
+              key={route}
+              data-scroll-signal
+              d={route}
+              pathLength={1}
+              stroke="#4f91ff"
+            />
+          ))}
+        </g>
+
+        <circle
+          data-scroll-junction
+          cx="220"
+          cy="165"
+          r="5"
+          fill="#4f91ff"
+        />
+
+        <g fill="#0a1b30" stroke="#7597c1" strokeWidth="1.25">
+          <rect x="14" y="131" width="104" height="68" />
+          <rect x="324" y="61" width="96" height="62" />
+          <rect x="324" y="207" width="96" height="62" />
+          <rect x="493" y="131" width="92" height="68" />
+        </g>
+
+        <g fill="#f4f8ff" fontFamily="DM Sans, sans-serif" textAnchor="middle">
+          <text x="66" y="159" fontSize="10" fontWeight="600" letterSpacing="1.2">AMAZON</text>
+          <text x="66" y="177" fontSize="14" fontWeight="700">Connect</text>
+          <text x="372" y="88" fontSize="10" fontWeight="600" letterSpacing="1.2">CONVERSATION</text>
+          <text x="372" y="106" fontSize="14" fontWeight="700">Amazon Lex</text>
+          <text x="372" y="234" fontSize="10" fontWeight="600" letterSpacing="1.2">CLOUD PLATFORM</text>
+          <text x="372" y="252" fontSize="14" fontWeight="700">AWS</text>
+          <text x="539" y="159" fontSize="10" fontWeight="600" letterSpacing="1.2">DELIVERY</text>
+          <text x="539" y="177" fontSize="12" fontWeight="700">IaC / CI</text>
+        </g>
+
+        <g fill="#8fa9c8" fontFamily="DM Sans, sans-serif" fontSize="10" letterSpacing="1.3">
+          <text x="14" y="294">CONTACT FLOWS</text>
+          <text x="324" y="294">INFRASTRUCTURE</text>
+          <text x="493" y="294">TERRAFORM · GITHUB ACTIONS</text>
+        </g>
+      </svg>
+      <p className="mt-3 text-xs leading-5 text-[#9db2cb]">
+        A visual index of the platforms and delivery tools used in this work.
+      </p>
+    </div>
+  );
+}
+
+function TechnologyList({ technologies }: { technologies: string[] }) {
+  return (
+    <ul
+      aria-label="Technologies and tools"
+      className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-medium leading-5 text-[#145ee8] sm:mt-6 sm:text-sm"
+    >
+      {technologies.map((technology, index) => (
+        <li key={technology} className="inline-flex items-center gap-2">
+          {index > 0 && (
+            <span aria-hidden="true" className="text-[#8ca3bd]">
+              ·
+            </span>
+          )}
+          <span>{technology}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 function Projects() {
   const shouldReduceMotion = useReducedMotion() ?? false;
+  const featuredProject = projects[0];
+  const additionalProjects = projects.slice(1);
 
   return (
     <section
       id="projects"
       aria-labelledby="projects-heading"
-      className="relative isolate overflow-clip bg-[#080b20] px-6 py-20 text-white sm:px-10 sm:py-24 lg:px-16 lg:py-28"
+      className="portfolio-projects scroll-mt-24 bg-[#f3f7fc] text-[#0b1b30]"
     >
-      {/* Subtle ambient background */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute right-[-12rem] top-24 -z-10 h-96 w-96 rounded-full bg-blue-600/[0.06] blur-[120px]"
-      />
-
-      <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.78fr_1.22fr] lg:gap-16">
-        {/* Left heading column */}
-        <div className="lg:sticky lg:top-24 lg:h-fit">
-          <motion.div
-            initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.4 }}
-            transition={{
-              duration: shouldReduceMotion ? 0 : 0.65,
-              ease: smoothEase,
-            }}
-          >
-            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.28em] text-cyan-300/80">
-              Selected work
-            </p>
-
+      <div className="mx-auto max-w-7xl px-5 pb-20 pt-20 sm:px-8 sm:pb-24 sm:pt-24 lg:px-12 lg:pb-28 lg:pt-28">
+        <motion.header
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 14 }}
+          whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.35 }}
+          transition={{ duration: shouldReduceMotion ? 0 : 0.6, ease: revealEase }}
+          className="mb-10 flex flex-col gap-5 border-b border-[#b9cbe0] pb-8 sm:mb-12 sm:pb-10 lg:flex-row lg:items-end lg:justify-between lg:gap-14"
+        >
+          <div>
             <h2
               id="projects-heading"
-              className="max-w-xl text-4xl font-bold leading-[1.12] tracking-tight sm:text-5xl lg:text-6xl"
+              className="max-w-3xl text-4xl font-bold leading-[0.98] tracking-[-0.055em] sm:text-5xl lg:text-6xl"
             >
-              Projects I've{" "}
-              <span className="bg-gradient-to-r from-blue-400 via-cyan-300 to-violet-400 bg-clip-text text-transparent">
-                worked on
-              </span>
+              Selected work
             </h2>
+          </div>
+          <p className="max-w-xl text-base leading-7 text-[#30455d] sm:text-lg sm:leading-8">
+            A selection of enterprise technology and automation work from my
+            professional experience, highlighting the systems and tools behind
+            the work.
+          </p>
+        </motion.header>
 
-            <motion.div
-              aria-hidden="true"
-              initial={shouldReduceMotion ? false : { opacity: 0, scaleX: 0 }}
-              whileInView={{ opacity: 1, scaleX: 1 }}
-              viewport={{ once: true, amount: 0.6 }}
-              transition={{
-                duration: shouldReduceMotion ? 0 : 0.75,
-                delay: shouldReduceMotion ? 0 : 0.15,
-                ease: smoothEase,
-              }}
-              className="relative mt-5 h-1 w-28 origin-left overflow-hidden rounded-full bg-gradient-to-r from-cyan-400 via-blue-500 to-violet-500 shadow-[0_0_16px_rgba(59,130,246,0.3)]"
-            >
-              {!shouldReduceMotion && (
-                <motion.span
-                  aria-hidden="true"
-                  className="absolute inset-y-0 left-0 w-1/2 rounded-full bg-gradient-to-r from-transparent via-white to-transparent blur-[1px]"
-                  animate={{ x: ["-100%", "250%"] }}
-                  transition={{
-                    duration: 1.6,
-                    ease: "easeInOut",
-                    repeat: Infinity,
-                    repeatDelay: 2,
-                  }}
-                />
-              )}
-            </motion.div>
-
-            <motion.p
-              initial={shouldReduceMotion ? false : { opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.4 }}
-              transition={{
-                duration: shouldReduceMotion ? 0 : 0.6,
-                delay: shouldReduceMotion ? 0 : 0.2,
-                ease: smoothEase,
-              }}
-              className="mt-6 max-w-md text-base leading-7 text-slate-400"
-            >
-              A selection of enterprise technology and automation work from my
-              professional experience, highlighting the systems and tools behind
-              the work.
-            </motion.p>
-
-            <div className="mt-8 flex items-center gap-3">
-              <span
-                aria-hidden="true"
-                className="h-px w-8 bg-gradient-to-r from-cyan-400/70 to-blue-500/20"
-              />
-              <span className="text-xs font-medium uppercase tracking-[0.18em] text-slate-500">
-                03 featured projects
-              </span>
+        <motion.article
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 18 }}
+          whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.16 }}
+          transition={{ duration: shouldReduceMotion ? 0 : 0.65, ease: revealEase }}
+          className="relative left-1/2 grid w-screen -translate-x-1/2 overflow-hidden bg-[#091a2e] text-white lg:grid-cols-[minmax(0,1fr)_minmax(400px,0.9fr)]"
+        >
+          <div className="mx-auto w-full max-w-7xl px-5 py-10 sm:px-8 sm:py-14 lg:col-span-2 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(400px,0.9fr)] lg:gap-12 lg:px-12 lg:py-[4.5rem] xl:gap-20">
+            <div className="max-w-2xl">
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#76a9ff] sm:text-sm">
+                {featuredProject.category}
+              </p>
+              <p className="mt-6 text-sm font-semibold text-[#b4c6dc] sm:text-base">
+                {featuredProject.client}
+              </p>
+              <h3 className="mt-2 max-w-xl text-3xl font-bold leading-[1.04] tracking-[-0.045em] text-white sm:text-4xl lg:text-5xl">
+                {featuredProject.title}
+              </h3>
+              <p className="mt-5 max-w-xl text-sm leading-7 text-[#c2d0df] sm:mt-6 sm:text-base sm:leading-8">
+                {featuredProject.description}
+              </p>
+              <TechnologyList technologies={featuredProject.technologies} />
             </div>
-          </motion.div>
-        </div>
 
-        {/* Right project column */}
-        <div className="relative grid min-w-0 gap-5 sm:gap-6 lg:gap-7">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute bottom-8 left-4 top-8 hidden w-px bg-gradient-to-b from-cyan-300/30 via-blue-400/15 to-violet-400/25 sm:block"
-          />
-          {projects.map((project, index) => (
+            <div className="mt-10 border-t border-white/20 pt-7 sm:mt-12 sm:pt-8 lg:mt-0 lg:border-l lg:border-t-0 lg:pl-10 lg:pt-0">
+              <SystemMap />
+            </div>
+          </div>
+        </motion.article>
+
+        <div className="border-b border-[#b9cbe0]">
+          {additionalProjects.map((project, index) => (
             <motion.article
-              key={project.number}
-              initial={shouldReduceMotion ? false : { opacity: 0, y: 22 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.15 }}
+              key={project.title}
+              initial={shouldReduceMotion ? false : { opacity: 0, y: 14 }}
+              whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.25 }}
               transition={{
-                duration: shouldReduceMotion ? 0 : 0.65,
-                delay: shouldReduceMotion ? 0 : index * 0.1,
-                ease: smoothEase,
+                duration: shouldReduceMotion ? 0 : 0.55,
+                delay: shouldReduceMotion ? 0 : index * 0.08,
+                ease: revealEase,
               }}
-              whileHover={
-                shouldReduceMotion
-                  ? undefined
-                  : {
-                      y: -5,
-                      borderColor: project.featured
-                        ? "rgba(103,232,249,0.38)"
-                        : "rgba(167,139,250,0.32)",
-                      boxShadow: project.featured
-                        ? "0 24px 70px rgba(0,0,0,0.34), 0 0 36px rgba(34,211,238,0.10)"
-                        : "0 24px 70px rgba(0,0,0,0.34), 0 0 36px rgba(129,140,248,0.10)",
-                    }
-              }
-              className={`group relative min-w-0 overflow-hidden rounded-2xl border border-white/[0.09] bg-gradient-to-br from-[#131d37] via-[#0e162e] to-[#090f22] shadow-[0_16px_45px_rgba(0,0,0,0.16)] transition-[border-color,box-shadow] duration-300 hover:border-white/[0.2] ${
-                project.featured ? "sm:p-8" : "sm:p-7"
-              } p-6`}
+              className="grid gap-4 border-b border-[#c9d7e7] py-8 last:border-b-0 sm:py-10 lg:grid-cols-[minmax(180px,0.7fr)_minmax(0,1.8fr)_minmax(190px,0.8fr)] lg:gap-10 lg:py-11"
             >
-              {/* Fine accent line */}
-              <div
-                aria-hidden="true"
-                className={`absolute left-8 right-8 top-0 h-px origin-left scale-x-50 bg-gradient-to-r ${project.accent} opacity-70 transition-[transform,opacity] duration-500 group-hover:scale-x-100 group-hover:opacity-100`}
-              />
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#145ee8]">
+                  {project.category}
+                </p>
+                <p className="mt-2 text-sm font-semibold text-[#52677f]">
+                  {project.client}
+                </p>
+              </div>
 
-              {/* Soft color wash that appears on hover */}
-              <div
-                aria-hidden="true"
-                className={`pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full bg-gradient-to-br ${project.accent} opacity-[0.045] blur-[90px] transition-opacity duration-500 group-hover:opacity-[0.13]`}
-              />
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-0 rounded-2xl bg-[radial-gradient(ellipse_at_15%_0%,rgba(255,255,255,0.055),transparent_45%)] opacity-70"
-              />
-
-              <div className="relative z-10">
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <div className="flex items-center gap-3">
-                    <span className="inline-flex h-7 min-w-7 items-center justify-center rounded-md border border-white/[0.08] bg-white/[0.035] px-1.5 font-mono text-[11px] font-medium text-slate-400">
-                      {project.number}
-                    </span>
-
-                    <span
-                      aria-hidden="true"
-                      className="h-1 w-1 rounded-full bg-slate-600"
-                    />
-
-                    <span className="text-[10px] font-semibold tracking-[0.19em] text-slate-400 sm:text-[11px]">
-                      {project.category}
-                    </span>
-                  </div>
-
-                  {project.featured && (
-                    <span className="inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/[0.07] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-cyan-200">
-                      <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-cyan-300 shadow-[0_0_8px_rgba(103,232,249,0.8)]" />
-                      Featured work
-                    </span>
-                  )}
-                </div>
-
-                <div className="mt-6 flex items-start gap-4 sm:mt-7">
-                  <div
-                    aria-hidden="true"
-                    className={`mt-1 h-12 w-1 shrink-0 rounded-full bg-gradient-to-b ${project.accent} opacity-80 shadow-[0_0_16px_rgba(96,165,250,0.2)] transition-all duration-300 group-hover:h-14 group-hover:opacity-100`}
-                  />
-
-                  <div className="min-w-0">
-                    <p className="text-xs font-semibold uppercase tracking-[0.12em] text-blue-300 sm:text-sm sm:normal-case sm:tracking-normal">
-                      {project.client}
-                    </p>
-
-                    <h3
-                      className={`mt-2 font-semibold leading-snug tracking-tight text-white transition-colors duration-300 group-hover:text-cyan-50 ${
-                        project.featured
-                          ? "text-2xl sm:text-3xl"
-                          : "text-xl sm:text-2xl"
-                      }`}
-                    >
-                      {project.title}
-                    </h3>
-                  </div>
-                </div>
-
-                <p className="mt-5 max-w-2xl text-sm leading-7 text-slate-300/80 sm:text-[15px] sm:leading-8">
+              <div>
+                <h3 className="text-xl font-bold leading-snug tracking-[-0.035em] text-[#10243b] sm:text-2xl">
+                  {project.title}
+                </h3>
+                <p className="mt-3 max-w-2xl text-sm leading-6 text-[#30455d] sm:text-base sm:leading-7">
                   {project.description}
                 </p>
+              </div>
 
-                <div className="mt-6 border-t border-white/[0.08] pt-5 sm:mt-7 sm:pt-6">
-                  <div className="mb-3 flex items-center justify-between gap-3">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">
-                      Technologies & tools
-                    </p>
-                    <span aria-hidden="true" className="h-px w-10 bg-gradient-to-r from-white/10 to-transparent" />
-                  </div>
-
-                  <div className="flex flex-wrap gap-2">
-                    {project.technologies.map((technology, techIndex) => (
-                      <motion.span
-                        key={technology}
-                        initial={shouldReduceMotion ? false : { opacity: 0, y: 5 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, amount: 0.4 }}
-                        transition={{
-                          duration: shouldReduceMotion ? 0 : 0.35,
-                          delay: shouldReduceMotion ? 0 : index * 0.08 + techIndex * 0.035,
-                          ease: smoothEase,
-                        }}
-                        className="inline-flex items-center gap-2 rounded-lg border border-white/[0.085] bg-[#080d1d]/55 px-2.5 py-1.5 text-xs font-medium text-slate-300 transition-[border-color,background-color,color,transform] duration-200 group-hover:border-white/[0.12] hover:-translate-y-0.5 hover:border-cyan-300/25 hover:bg-white/[0.055] hover:text-white"
-                      >
-                        <span aria-hidden="true" className={`h-1 w-1 rounded-full bg-gradient-to-r ${project.accent} opacity-80`} />
-                        {technology}
-                      </motion.span>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="mt-5 flex items-center gap-2.5 text-xs text-slate-500 sm:mt-6">
-                  <span
-                    aria-hidden="true"
-                    className={`h-1.5 w-1.5 rounded-full bg-gradient-to-r ${project.accent} shadow-[0_0_8px_rgba(34,211,238,0.35)]`}
-                  />
-                  <span className="tracking-wide">Professional experience</span>
-                  <span aria-hidden="true" className="ml-auto h-px w-8 bg-white/[0.08]" />
-                  <span className="font-mono text-[10px] text-slate-600">{project.number} / 03</span>
-                </div>
+              <div className="border-t border-[#d5dfeb] pt-4 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0">
+                <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#52677f]">
+                  Technologies
+                </p>
+                <TechnologyList technologies={project.technologies} />
               </div>
             </motion.article>
           ))}

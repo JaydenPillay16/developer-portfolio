@@ -1,5 +1,5 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
-import jpLogo from "../assets/jp-logo.png";
+import jpLogo from "../assets/jp-monogram.png";
 
 import {
   EMAILJS_PUBLIC_KEY,
@@ -7,8 +7,8 @@ import {
   EMAILJS_TEMPLATE_ID,
 } from "../components/config/contact";
 
-import { motion, useReducedMotion } from "motion/react";
-import { FaGithub, FaLinkedin, FaPaperPlane } from "react-icons/fa";
+import { Send } from "lucide-react";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
 
 type FormData = {
   name: string;
@@ -17,13 +17,13 @@ type FormData = {
   message: string;
 };
 
-type SubmissionStatus = "" | "success" | "error";
+type ContactField = "name" | "email" | "message";
+type FieldErrors = Partial<Record<ContactField, string>>;
+type SubmissionStatus = "" | "success" | "error" | "validation";
 
 const currentYear = new Date().getFullYear();
 
 function Contact() {
-  const shouldReduceMotion = useReducedMotion() ?? false;
-
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
@@ -32,9 +32,8 @@ function Contact() {
   });
 
   const [status, setStatus] = useState<SubmissionStatus>("");
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [isSending, setIsSending] = useState(false);
-
-  const smoothEase = [0.22, 1, 0.36, 1] as const;
 
   function handleChange(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -46,6 +45,10 @@ function Contact() {
       [name]: value,
     }));
 
+    if (name === "name" || name === "email" || name === "message") {
+      setFieldErrors((previous) => ({ ...previous, [name]: undefined }));
+    }
+
     if (status) {
       setStatus("");
     }
@@ -55,6 +58,37 @@ function Contact() {
     event.preventDefault();
 
     if (isSending) return;
+
+    const nextErrors: FieldErrors = {};
+    if (!formData.name.trim()) {
+      nextErrors.name = "Please enter your full name.";
+    }
+
+    if (!formData.email.trim()) {
+      nextErrors.email = "Please enter your email address.";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
+      nextErrors.email = "Enter a valid email address, such as name@example.com.";
+    }
+
+    if (!formData.message.trim()) {
+      nextErrors.message = "Please enter a message.";
+    } else if (formData.message.trim().length < 10) {
+      nextErrors.message = "Please use at least 10 characters so I can respond helpfully.";
+    }
+
+    setFieldErrors(nextErrors);
+
+    if (Object.keys(nextErrors).length > 0) {
+      setStatus("validation");
+      const firstInvalidField = (Object.keys(nextErrors) as ContactField[])[0];
+      const inputIds: Record<ContactField, string> = {
+        name: "contact-name",
+        email: "contact-email",
+        message: "contact-message",
+      };
+      document.getElementById(inputIds[firstInvalidField])?.focus();
+      return;
+    }
 
     setIsSending(true);
     setStatus("");
@@ -74,6 +108,7 @@ function Contact() {
       );
 
       setStatus("success");
+      setFieldErrors({});
 
       setFormData({
         name: "",
@@ -90,10 +125,11 @@ function Contact() {
   }
 
   const inputClass =
-    "w-full rounded-xl border border-white/10 bg-[#080d1c]/80 px-4 py-3.5 text-sm text-white placeholder:text-[#74839a] outline-none transition-all duration-300 focus:border-blue-400/60 focus:ring-2 focus:ring-blue-500/10";
+    "w-full rounded-[5px] border border-[#9eb2c8] bg-[#f8fbff] px-3.5 py-3 text-base text-[#0b1b30] placeholder:text-[#52677d] transition-colors focus:border-[#1555bf] focus-visible:outline-offset-2";
 
   const footerLinks = [
     { label: "About", href: "#about" },
+    { label: "Skills", href: "#skills" },
     { label: "Projects", href: "#projects" },
     { label: "Certifications", href: "#certifications" },
     { label: "Experience", href: "#experience" },
@@ -105,318 +141,230 @@ function Contact() {
     <section
       id="contact"
       aria-labelledby="contact-heading"
-      className="relative isolate overflow-hidden bg-[#080b20] px-5 pb-0 pt-24 text-white sm:px-10 sm:pb-0 sm:pt-28 lg:px-16 lg:pb-0 lg:pt-32"
+      className="contact-section bg-[#f3f7fc] text-[#0b1b30]"
     >
-      {/* Ambient background */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
-      >
-        <div className="absolute -left-40 top-20 h-96 w-96 rounded-full bg-blue-600/[0.07] blur-[130px]" />
-        <div className="absolute -right-40 bottom-0 h-96 w-96 rounded-full bg-violet-600/[0.08] blur-[140px]" />
-        <div className="absolute inset-0 bg-[radial-gradient(rgba(148,163,184,0.12)_0.7px,transparent_0.7px)] [background-size:26px_26px] opacity-[0.08]" />
-      </div>
-
-      <div className="mx-auto max-w-7xl">
-        <div className="grid items-start gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16 xl:gap-24">
-          {/* Left: Introduction */}
-          <motion.div
-            initial={shouldReduceMotion ? false : { opacity: 0, y: 24 }}
-            whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{
-              duration: shouldReduceMotion ? 0 : 0.7,
-              ease: smoothEase,
-            }}
-            className="text-left"
-          >
-            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.3em] text-blue-400 sm:text-sm">
-              Get In Touch
-            </p>
-
+      <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-28">
+        <div className="grid min-w-0 items-start gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:gap-16 xl:gap-24">
+          <div data-scroll-reveal>
             <h2
               id="contact-heading"
-              className="max-w-xl text-4xl font-bold leading-tight tracking-tight sm:text-5xl xl:text-6xl"
+              className="max-w-xl text-balance text-[clamp(2.75rem,6vw,5rem)] font-bold leading-[0.98] tracking-[-0.055em]"
             >
-              Let&apos;s build something{" "}
-              <span className="bg-gradient-to-r from-blue-400 via-cyan-300 to-violet-400 bg-clip-text text-transparent">
-                meaningful
-              </span>
+              Let&apos;s build something <span className="text-[#1555bf]">meaningful.</span>
             </h2>
 
-            {/* Animated glowing underline */}
-            <motion.div
-              aria-hidden="true"
-              initial={shouldReduceMotion ? false : { opacity: 0, scaleX: 0 }}
-              whileInView={{ opacity: 1, scaleX: 1 }}
-              viewport={{ once: true, amount: 0.6 }}
-              transition={{
-                duration: shouldReduceMotion ? 0 : 0.8,
-                ease: smoothEase,
-              }}
-              className="relative mt-6 h-[3px] w-32 origin-left overflow-hidden rounded-full bg-gradient-to-r from-cyan-400 via-blue-500 to-violet-500 shadow-[0_0_16px_rgba(59,130,246,0.35)]"
-            >
-              {!shouldReduceMotion && (
-                <motion.span
-                  aria-hidden="true"
-                  className="absolute inset-y-0 left-0 w-1/2 rounded-full bg-gradient-to-r from-transparent via-white to-transparent blur-[1px]"
-                  animate={{ x: ["-100%", "250%"] }}
-                  transition={{
-                    duration: 1.6,
-                    ease: "easeInOut",
-                    repeat: Infinity,
-                    repeatDelay: 1.2,
-                  }}
-                />
-              )}
-            </motion.div>
-
-            <p className="mt-6 max-w-lg text-base leading-8 text-slate-400 sm:text-lg">
+            <p className="mt-6 max-w-lg text-base leading-7 text-[#30455d] sm:text-lg sm:leading-8">
               I&apos;m always interested in connecting with people, exploring
               opportunities, and building useful technology. Whether you&apos;re
               recruiting, have a project in mind, or simply want to collaborate,
               let&apos;s start a conversation.
             </p>
 
-            {/* Social links */}
-            <div className="mt-10">
-              <p className="mb-5 text-sm font-medium text-slate-400">
-                You can also find me on
-              </p>
+            <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 border-t border-[#bdcde0] pt-4">
+              <a
+                href="https://github.com/JaydenPillay16"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Visit my GitHub profile"
+                className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-[#1555bf]! underline! underline-offset-4 hover:text-[#0b1b30]!"
+              >
+                <FaGithub aria-hidden="true" className="size-4" />
+                GitHub
+              </a>
 
-              <div className="flex flex-wrap gap-4">
-                <a
-                  href="https://github.com/JaydenPillay16"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Visit my GitHub profile"
-                  className="group inline-flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.03] px-5 py-3.5 text-sm font-medium text-slate-300 transition-all duration-300 hover:-translate-y-1 hover:border-white/25 hover:bg-white/[0.06] hover:text-white hover:shadow-[0_8px_30px_rgba(255,255,255,0.05)]"
-                >
-                  <FaGithub
-                    aria-hidden="true"
-                    className="text-xl transition-transform duration-300 group-hover:scale-110"
-                  />
-                  GitHub
-                </a>
-
-                <a
-                  href="https://www.linkedin.com/in/jayden-pillay-44947a261/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Visit my LinkedIn profile"
-                  className="group inline-flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.03] px-5 py-3.5 text-sm font-medium text-slate-300 transition-all duration-300 hover:-translate-y-1 hover:border-blue-400/40 hover:bg-blue-500/[0.05] hover:text-white hover:shadow-[0_8px_30px_rgba(59,130,246,0.08)]"
-                >
-                  <FaLinkedin
-                    aria-hidden="true"
-                    className="text-xl text-[#0A66C2] transition-transform duration-300 group-hover:scale-110"
-                  />
-                  LinkedIn
-                </a>
-              </div>
+              <a
+                href="https://www.linkedin.com/in/jayden-pillay-44947a261/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Visit my LinkedIn profile"
+                className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-[#1555bf]! underline! underline-offset-4 hover:text-[#0b1b30]!"
+              >
+                <FaLinkedin aria-hidden="true" className="size-4" />
+                LinkedIn
+              </a>
             </div>
-          </motion.div>
+          </div>
 
-          {/* Right: Contact form */}
-          <motion.div
-            initial={shouldReduceMotion ? false : { opacity: 0, y: 24 }}
-            whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.15 }}
-            transition={{
-              duration: shouldReduceMotion ? 0 : 0.7,
-              delay: shouldReduceMotion ? 0 : 0.12,
-              ease: smoothEase,
-            }}
-            className="relative"
-          >
-            <div className="pointer-events-none absolute -inset-1 rounded-3xl bg-gradient-to-br from-blue-500/10 via-transparent to-violet-500/10 blur-xl" />
-
-            <div className="relative rounded-3xl border border-white/[0.10] bg-[#0d1329]/90 p-6 shadow-[0_20px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl sm:p-8 lg:p-9">
-              <div className="mb-8">
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-blue-400">
-                  Your next step
-                </p>
-
-                <h3 className="mt-3 text-2xl font-bold tracking-tight text-white sm:text-3xl">
-                  Send me a message
-                </h3>
-
-                <p className="mt-3 text-sm leading-6 text-slate-400">
-                  Tell me a little about yourself and what you have in mind.
-                  I&apos;d love to hear from you.
-                </p>
-              </div>
-
-              <form onSubmit={handleSubmit} className="space-y-5">
-                {/* Name and email */}
-                <div className="grid gap-5 sm:grid-cols-2">
-                  <div>
-                    <label
-                      htmlFor="contact-name"
-                      className="mb-2 block text-sm font-medium text-slate-300"
-                    >
-                      Full name <span className="text-blue-400">*</span>
-                    </label>
-
-                    <input
-                      id="contact-name"
-                      name="name"
-                      type="text"
-                      autoComplete="name"
-                      placeholder="John Smith"
-                      value={formData.name}
-                      onChange={handleChange}
-                      className={inputClass}
-                      required
-                      maxLength={100}
-                    />
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="contact-email"
-                      className="mb-2 block text-sm font-medium text-slate-300"
-                    >
-                      Email address <span className="text-blue-400">*</span>
-                    </label>
-
-                    <input
-                      id="contact-email"
-                      name="email"
-                      type="email"
-                      autoComplete="email"
-                      placeholder="john@company.com"
-                      value={formData.email}
-                      onChange={handleChange}
-                      className={inputClass}
-                      required
-                      maxLength={254}
-                    />
-                  </div>
-                </div>
-
-                {/* Optional company */}
+          <div className="min-w-0 border-t-2 border-[#2875ff] bg-white px-4 py-6 sm:border-x sm:border-b sm:border-x-[#cfdae7] sm:border-b-[#cfdae7] sm:p-8">
+            <h3 className="text-2xl font-bold tracking-tight sm:text-3xl">
+              Send me a message
+            </h3>
+            <p className="mb-6 mt-2 text-sm leading-6 text-[#52677d]">
+              Tell me a little about yourself and what you have in mind.
+              I&apos;d love to hear from you.
+            </p>
+            <form onSubmit={handleSubmit} noValidate className="space-y-5">
+              {/* Name and email */}
+              <div className="grid gap-5 sm:grid-cols-2">
                 <div>
                   <label
-                    htmlFor="contact-company"
-                    className="mb-2 block text-sm font-medium text-slate-300"
+                    htmlFor="contact-name"
+                    className="mb-2 block text-sm font-medium text-[#243c57]"
                   >
-                    Company{" "}
-                    <span className="font-normal text-slate-500">
-                      (optional)
-                    </span>
+                    Full name <span className="text-[#1555bf]">*</span>
                   </label>
 
                   <input
-                    id="contact-company"
-                    name="company"
+                    id="contact-name"
+                    name="name"
                     type="text"
-                    autoComplete="organization"
-                    placeholder="Your company or organisation"
-                    value={formData.company}
+                    autoComplete="name"
+                    placeholder="John Smith"
+                    value={formData.name}
                     onChange={handleChange}
-                    className={inputClass}
-                    maxLength={150}
+                    className={`${inputClass} aria-invalid:border-red-700`}
+                    aria-invalid={fieldErrors.name ? true : undefined}
+                    aria-describedby={fieldErrors.name ? "contact-name-error" : undefined}
+                    required
+                    maxLength={100}
                   />
+                  {fieldErrors.name && (
+                    <p id="contact-name-error" className="mt-2 text-sm text-red-800">
+                      {fieldErrors.name}
+                    </p>
+                  )}
                 </div>
 
-                {/* Message */}
                 <div>
                   <label
-                    htmlFor="contact-message"
-                    className="mb-2 block text-sm font-medium text-slate-300"
+                    htmlFor="contact-email"
+                    className="mb-2 block text-sm font-medium text-[#243c57]"
                   >
-                    Your message <span className="text-blue-400">*</span>
+                    Email address <span className="text-[#1555bf]">*</span>
                   </label>
 
-                  <textarea
-                    id="contact-message"
-                    name="message"
-                    rows={5}
-                    placeholder="Tell me about your opportunity, project, or idea..."
-                    value={formData.message}
+                  <input
+                    id="contact-email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    placeholder="john@company.com"
+                    value={formData.email}
                     onChange={handleChange}
-                    className={`${inputClass} min-h-36 resize-y`}
+                    className={`${inputClass} aria-invalid:border-red-700`}
+                    aria-invalid={fieldErrors.email ? true : undefined}
+                    aria-describedby={fieldErrors.email ? "contact-email-error" : undefined}
                     required
-                    minLength={10}
-                    maxLength={3000}
+                    maxLength={254}
                   />
-
-                  <p className="mt-2 text-right text-xs text-slate-500">
-                    {formData.message.length}/3000
-                  </p>
+                  {fieldErrors.email && (
+                    <p id="contact-email-error" className="mt-2 text-sm text-red-800">
+                      {fieldErrors.email}
+                    </p>
+                  )}
                 </div>
+              </div>
 
-                {/* Success and error messages */}
-                {status && (
-                  <p
-                    role="status"
-                    aria-live="polite"
-                    className={`rounded-xl border px-4 py-3 text-sm leading-6 ${
-                      status === "success"
-                        ? "border-emerald-400/20 bg-emerald-400/[0.06] text-emerald-300"
-                        : "border-red-400/20 bg-red-400/[0.06] text-red-300"
-                    }`}
-                  >
-                    {status === "success"
-                      ? "Your message has been sent successfully! Thanks for reaching out."
-                      : "Sorry, your message couldn't be sent. Please try again in a moment."}
+              {/* Optional company */}
+              <div>
+                <label
+                  htmlFor="contact-company"
+                  className="mb-2 block text-sm font-medium text-[#243c57]"
+                >
+                  Company{" "}
+                  <span className="font-normal text-[#52677d]">
+                    (optional)
+                  </span>
+                </label>
+
+                <input
+                  id="contact-company"
+                  name="company"
+                  type="text"
+                  autoComplete="organization"
+                  placeholder="Your company or organisation"
+                  value={formData.company}
+                  onChange={handleChange}
+                  className={inputClass}
+                  maxLength={150}
+                />
+              </div>
+
+              {/* Message */}
+              <div>
+                <label
+                  htmlFor="contact-message"
+                  className="mb-2 block text-sm font-medium text-[#243c57]"
+                >
+                  Your message <span className="text-[#1555bf]">*</span>
+                </label>
+
+                <textarea
+                  id="contact-message"
+                  name="message"
+                  rows={5}
+                  placeholder="Tell me about your opportunity, project, or idea..."
+                  value={formData.message}
+                  onChange={handleChange}
+                  className={`${inputClass} min-h-36 resize-y aria-invalid:border-red-700`}
+                  aria-invalid={fieldErrors.message ? true : undefined}
+                  aria-describedby={fieldErrors.message ? "contact-message-error" : undefined}
+                  required
+                  minLength={10}
+                  maxLength={3000}
+                />
+
+                {fieldErrors.message && (
+                  <p id="contact-message-error" className="mt-2 text-sm text-red-800">
+                    {fieldErrors.message}
                   </p>
                 )}
 
-                {/* Submit button */}
-                <motion.button
-                  type="submit"
-                  disabled={isSending}
-                  whileHover={
-                    shouldReduceMotion || isSending
-                      ? undefined
-                      : { y: -2, scale: 1.01 }
-                  }
-                  whileTap={
-                    shouldReduceMotion || isSending
-                      ? undefined
-                      : { scale: 0.98 }
-                  }
-                  className="group inline-flex w-full items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-blue-500 via-blue-600 to-violet-600 px-6 py-4 font-semibold text-white shadow-[0_8px_30px_rgba(79,70,229,0.18)] transition-shadow duration-300 hover:shadow-[0_8px_35px_rgba(99,102,241,0.35)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0d1329] disabled:cursor-not-allowed disabled:opacity-70"
-                >
-                  {isSending ? (
-                    <>
-                      <span
-                        aria-hidden="true"
-                        className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white"
-                      />
-                      Sending message...
-                    </>
-                  ) : (
-                    <>
-                      {status === "success" ? "Message sent!" : "Send message"}
-                      <FaPaperPlane
-                        aria-hidden="true"
-                        className="text-sm transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-0.5"
-                      />
-                    </>
-                  )}
-                </motion.button>
-
-                <p className="text-center text-xs leading-5 text-slate-500">
-                  Your details will be used to respond to your enquiry.
+                <p className="mt-2 text-right text-xs text-[#52677d]">
+                  {formData.message.length}/3000
                 </p>
-              </form>
-            </div>
-          </motion.div>
+              </div>
+
+              {/* Success and error messages */}
+              {status && (
+                <p
+                  role="status"
+                  aria-live="polite"
+                  className={`rounded-xl border px-4 py-3 text-sm leading-6 ${
+                    status === "success"
+                      ? "border-emerald-300 bg-emerald-50 text-emerald-900"
+                      : "border-red-200 bg-red-50 text-red-900"
+                  }`}
+                >
+                  {status === "success"
+                    ? "Your message has been sent successfully! Thanks for reaching out."
+                    : status === "validation"
+                      ? "Please correct the highlighted fields, then submit again."
+                      : "Sorry, your message couldn't be sent. Please try again in a moment."}
+                </p>
+              )}
+
+              {/* Submit button */}
+              <button
+                type="submit"
+                disabled={isSending}
+                className="inline-flex min-h-[54px] w-full items-center justify-between gap-5 rounded-[5px] bg-[#1659cd] px-5 py-3 font-bold text-white shadow-[0_4px_0_#0e3c8d] transition-colors hover:bg-[#1049ac] active:translate-y-px disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
+              >
+                {isSending ? (
+                  <>
+                    <span
+                      aria-hidden="true"
+                      className="h-4 w-4 motion-safe:animate-spin rounded-full border-2 border-white/30 border-t-white"
+                    />
+                    Sending message...
+                  </>
+                ) : (
+                  <>
+                    {status === "success" ? "Message sent!" : "Send message"}
+                    <Send aria-hidden="true" className="size-4" strokeWidth={1.8} />
+                  </>
+                )}
+              </button>
+
+              <p className="text-xs leading-5 text-[#52677d]">
+                Your details will be used to respond to your enquiry.
+              </p>
+            </form>
+          </div>
         </div>
-
-        {/* Site footer */}
-        <footer aria-label="Site footer" className="relative mt-20 border-t border-white/[0.09] pt-10 sm:mt-24 sm:pt-12">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -top-px left-0 h-px w-48 bg-gradient-to-r from-cyan-300/70 via-blue-400/35 to-transparent"
-          />
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -right-12 -top-12 -z-10 h-48 w-64 rounded-full bg-violet-500/[0.07] blur-[80px]"
-          />
-
+      </div>
+      <footer aria-label="Site footer" className="bg-[#091a2e] text-[#e0ebf9]">
+        <div className="mx-auto max-w-7xl px-5 pt-10 sm:px-8 sm:pt-12 lg:px-12">
           <div className="grid gap-10 pb-10 md:grid-cols-[1fr_auto] md:items-start md:gap-16">
             <div>
               <a
@@ -424,42 +372,36 @@ function Contact() {
                 aria-label="Jayden Pillay - Home"
                 className="group inline-flex items-center gap-3 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
               >
-                <span className="relative flex h-11 w-12 shrink-0 items-center justify-center overflow-hidden rounded-[14px] border border-cyan-200/30 bg-[#0b1026] shadow-[0_0_18px_rgba(59,130,246,0.14)] transition-[transform,border-color,box-shadow] duration-300 group-hover:scale-105 group-hover:border-cyan-200/55 group-hover:shadow-[0_0_24px_rgba(59,130,246,0.26)] after:pointer-events-none after:absolute after:inset-[3px] after:rounded-[10px] after:border after:border-violet-300/25 after:content-['']">
-                  <img
-                    src={jpLogo}
-                    alt=""
-                    aria-hidden="true"
-                    className="h-full w-full rounded-[11px] object-cover transition-all duration-300 group-hover:drop-shadow-[0_0_8px_rgba(103,232,249,0.3)]"
-                  />
-                </span>
+                <img
+                  src={jpLogo}
+                  alt=""
+                  aria-hidden="true"
+                  className="h-9 w-16 shrink-0 object-contain transition-transform duration-200 group-hover:scale-[1.04]"
+                />
                 <span className="flex flex-col">
                   <span className="text-sm font-semibold tracking-wide text-white sm:text-[15px]">
                     Jayden Pillay
                   </span>
-                  <span className="mt-1 bg-gradient-to-r from-cyan-300 via-blue-400 to-violet-400 bg-clip-text text-[9px] font-semibold tracking-[0.19em] text-transparent sm:text-[10px]">
+                  <span className="mt-1 text-[#91baff] text-[9px] font-semibold tracking-[0.19em] sm:text-[10px]">
                     SOFTWARE ENGINEER
                   </span>
                 </span>
               </a>
-              <p className="mt-4 max-w-sm text-sm leading-6 text-slate-400">
+              <p className="mt-4 max-w-sm text-sm leading-6 text-[#bdcee3]">
                 Building thoughtful software across cloud, automation, and enterprise technology.
               </p>
             </div>
 
             <nav aria-label="Footer navigation">
-              <h3 className="mb-4 text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-500">Explore</h3>
-              <ul className="grid grid-flow-col grid-rows-3 gap-x-10 gap-y-3 sm:gap-x-16">
+              <h3 className="mb-4 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#9eb4ce]">Explore</h3>
+              <ul className="grid grid-cols-2 gap-x-7 gap-y-2 sm:grid-cols-3 sm:gap-x-12">
                 {footerLinks.map((link) => (
                   <li key={link.href}>
                     <a
                       href={link.href}
-                      className="group relative inline-flex py-1 text-sm text-slate-400 transition-colors duration-300 hover:-translate-y-0.5 hover:text-cyan-200 hover:drop-shadow-[0_0_10px_rgba(103,232,249,0.45)] focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/60"
+                      className="inline-flex py-1 text-sm text-[#bdcee3] underline-offset-4 transition-colors hover:text-white hover:underline focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/60"
                     >
                       {link.label}
-                      <span
-                        aria-hidden="true"
-                        className="absolute inset-x-0 -bottom-px h-[2px] origin-center scale-x-0 rounded-full bg-gradient-to-r from-cyan-400 via-blue-400 to-violet-400 opacity-70 transition-all duration-300 ease-out group-hover:scale-x-75 group-hover:opacity-100 group-hover:shadow-[0_0_8px_rgba(103,232,249,0.4)]"
-                      />
                     </a>
                   </li>
                 ))}
@@ -467,12 +409,12 @@ function Contact() {
             </nav>
           </div>
 
-          <div className="flex flex-col gap-2 border-t border-white/[0.07] py-5 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-2 border-t border-white/[0.07] py-5 text-xs text-[#9eb4ce] sm:flex-row sm:items-center sm:justify-between">
             <p>© {currentYear} Jayden Pillay. All rights reserved.</p>
             <p className="tracking-wide">Designed with purpose. Built with code.</p>
           </div>
-        </footer>
-      </div>
+        </div>
+      </footer>
     </section>
   );
 }
