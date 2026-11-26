@@ -309,11 +309,11 @@ export default function Skills() {
       aria-labelledby="skills-heading"
       className="skills-section relative bg-[#091a2e] text-[#f4f8ff]"
     >
+      <div className="color-shift" aria-hidden="true"><span className="color-shift__rule" /></div>
       <span id="technologies" aria-hidden="true" className="absolute top-0 scroll-mt-24" />
       <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-28">
         <header
-          data-scroll-reveal
-          className="grid items-end gap-4 border-b border-[#35506e] pb-8 lg:grid-cols-[0.85fr_1.15fr] lg:gap-12"
+          className="grid items-end gap-4 border-b border-[#35506e] pb-8 lg:grid-cols-[0.82fr_1.18fr] lg:gap-12"
         >
           <h2
             id="skills-heading"
@@ -331,29 +331,31 @@ export default function Skills() {
         <div className="divide-y divide-[#35506e] border-b border-[#35506e]">
           {skillGroups.map((group) => (
             <details key={group.id} name="portfolio-skills" className="group">
-              <summary className="skills-summary relative grid min-w-0 list-none gap-5 py-6 pl-1 pr-10 transition-colors hover:bg-white/[0.035] focus-visible:outline-offset-[-2px] sm:py-8 sm:pl-3 lg:grid-cols-[0.85fr_1.15fr] lg:gap-12 lg:pr-14">
-                <span className="flex min-w-0 items-start gap-3">
-                  <span aria-hidden="true" className="mt-0.5 shrink-0 text-[#91baff]">
+              <summary className="skills-summary relative grid min-w-0 list-none gap-5 py-6 pr-10 transition-colors hover:bg-white/[0.035] focus-visible:outline-offset-[-2px] sm:py-8 lg:grid-cols-[0.82fr_1.18fr] lg:gap-12 lg:pr-14">
+                <span className="flex min-w-0 items-start gap-3.5">
+                  <span aria-hidden="true" className="mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-md border border-[#345477] bg-[#112c4a] text-[#a8cbff]">
                     {group.icon}
                   </span>
                   <span className="min-w-0">
-                    <span className="block font-[Space_Grotesk] text-xl font-bold leading-snug tracking-[-0.035em] sm:text-2xl">
+                    <span className="block font-[Space_Grotesk] text-xl font-bold leading-snug tracking-[-0.035em] text-white sm:text-2xl">
                       {group.title}
                     </span>
-                    <span className="mt-1 block text-sm leading-6 text-[#a9bed6]">
+                    <span className="mt-1.5 block text-sm leading-6 text-[#bdcee3]">
                       {group.subtitle}
                     </span>
                   </span>
                 </span>
                 <span className="min-w-0">
-                  <span className="block text-sm leading-6 text-[#bdcee3]">
+                  <span className="block max-w-2xl text-sm leading-6 text-[#d3e0ef] sm:text-[15px] sm:leading-7">
                     {group.description}
                   </span>
-                  <span className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-sm font-semibold text-[#d6e6fa] group-open:hidden">
+                  <span className="mt-4 flex flex-wrap gap-2 group-open:hidden">
                     {group.skills.map((skill) => (
-                      <span key={skill.name} className="inline-flex items-center gap-1.5">
-                        <span aria-hidden="true" className={skill.iconColor}>{skill.icon}</span>
-                        {skill.name}
+                      <span key={skill.name} className="inline-flex min-h-9 items-center gap-2 rounded-md border border-[#34506d] bg-[#0d223a] py-1 pl-1 pr-2.5 text-xs font-semibold text-[#e2edfa] sm:text-[13px]">
+                        <span aria-hidden="true" className="flex size-7 items-center justify-center rounded border border-[#345477] bg-[#102b49] p-1 [&>img]:max-h-full [&>img]:max-w-full [&>svg]:max-h-full [&>svg]:max-w-full">
+                          <span className={skill.iconColor}>{skill.icon}</span>
+                        </span>
+                        <span>{skill.name}</span>
                       </span>
                     ))}
                   </span>
@@ -366,18 +368,20 @@ export default function Skills() {
 
               <ul
                 role="list"
-                className="grid gap-x-8 px-1 pb-6 sm:grid-cols-2 sm:px-3 sm:pb-8 lg:ml-[calc(42.5%+0.7rem)]"
+                className="grid gap-x-8 px-1 pb-6 sm:grid-cols-2 sm:px-3 sm:pb-8 lg:ml-[calc(41%+1rem)]"
               >
                 {group.skills.map((skill) => (
-                  <li key={skill.name} className="border-t border-[#304965] py-3.5">
-                    <h3 className="flex items-center gap-2.5 text-base font-bold">
-                      <span aria-hidden="true" className={skill.iconColor}>{skill.icon}</span>
-                      {skill.name}
-                    </h3>
-                    <p className="mt-1.5 text-sm leading-6 text-[#bdcee3]">{skill.description}</p>
-                    {skill.context && (
-                      <p className="mt-1.5 text-xs font-semibold text-[#91baff]">{skill.context}</p>
-                    )}
+                  <li key={skill.name} className="flex gap-3.5 border-t border-[#304965] py-4 sm:py-5">
+                    <span aria-hidden="true" className="flex size-10 shrink-0 items-center justify-center rounded-md border border-[#345477] bg-[#102b49] p-2 [&>img]:max-h-full [&>img]:max-w-full [&>svg]:max-h-full [&>svg]:max-w-full">
+                      <span className={skill.iconColor}>{skill.icon}</span>
+                    </span>
+                    <span className="min-w-0">
+                      <h3 className="text-base font-bold leading-6 text-white">{skill.name}</h3>
+                      <p className="mt-1.5 text-sm leading-6 text-[#bdcee3]">{skill.description}</p>
+                      {skill.context && (
+                        <p className="mt-2 text-xs font-semibold text-[#a8cbff]">{skill.context}</p>
+                      )}
+                    </span>
                   </li>
                 ))}
               </ul>

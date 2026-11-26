@@ -1,5 +1,3 @@
-import { motion, useReducedMotion } from "motion/react";
-
 const experiences = [
   {
     role: "Associate Software Engineer",
@@ -47,51 +45,34 @@ const experiences = [
   },
 ];
 
-const revealEase = [0.22, 1, 0.36, 1] as const;
-
 function Experience() {
-  const shouldReduceMotion = useReducedMotion();
-
   return (
     <section
       id="experience"
       aria-labelledby="experience-heading"
       className="experience-section scroll-mt-24 bg-[#f3f7fc] px-5 pb-20 text-[#0b1b30] sm:px-8 sm:pb-24 lg:px-12 lg:pb-28"
     >
+      <div className="color-shift" aria-hidden="true"><span className="color-shift__rule" /></div>
       <div className="mx-auto max-w-7xl">
-        <motion.header
-          initial={shouldReduceMotion ? false : { opacity: 0, y: 14 }}
-          whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.35 }}
-          transition={{ duration: shouldReduceMotion ? 0 : 0.6, ease: revealEase }}
-          className="max-w-4xl pb-8 pt-20 sm:pb-10 sm:pt-24 lg:pb-12 lg:pt-28"
-        >
+        <header className="max-w-4xl pb-8 pt-20 sm:pb-10 sm:pt-24 lg:pb-12 lg:pt-28">
           <h2
             id="experience-heading"
             className="max-w-3xl text-4xl font-bold leading-[0.98] tracking-[-0.055em] sm:text-5xl lg:text-6xl"
           >
             Professional experience
           </h2>
-        </motion.header>
+        </header>
 
-        <div data-scroll-career className="relative ml-[5px] border-l border-[#9bb8da] sm:ml-[6px]">
+        <div className="relative ml-[5px] border-l border-[#9bb8da] sm:ml-[6px]">
           <div
             aria-hidden="true"
-            data-scroll-career-line
-            className="absolute -bottom-1 -top-1 left-[-1px] w-[2px] origin-top bg-[#1765f5]"
+            data-career-rule
+            className="origin-top absolute -bottom-1 -top-1 left-[-1px] w-[2px] bg-[#1765f5]"
           />
 
-          {experiences.map((experience, index) => (
-            <motion.article
+          {experiences.map((experience) => (
+            <article
               key={`${experience.role}-${experience.period}`}
-              initial={shouldReduceMotion ? false : { opacity: 0, y: 14 }}
-              whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.25 }}
-              transition={{
-                duration: shouldReduceMotion ? 0 : 0.55,
-                delay: shouldReduceMotion ? 0 : index * 0.06,
-                ease: revealEase,
-              }}
               className="group relative grid gap-3 border-b border-[#c9d7e7] py-6 pl-7 last:border-b-0 sm:py-7 sm:pl-9 lg:grid-cols-[190px_minmax(0,1fr)] lg:gap-10 lg:py-8"
             >
               <span
@@ -130,7 +111,7 @@ function Experience() {
                     height="23"
                     loading="lazy"
                     decoding="async"
-                    className="h-[18px] w-[88px] shrink-0 object-contain object-left brightness-0 sm:object-right"
+                    className="h-[20px] w-[96px] shrink-0 object-contain object-left sm:object-right"
                   />
                 </div>
 
@@ -154,7 +135,7 @@ function Experience() {
                   ))}
                 </ul>
               </div>
-            </motion.article>
+            </article>
           ))}
         </div>
       </div>

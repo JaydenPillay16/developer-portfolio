@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState, type MouseEvent } from "react";
+import { useEffect, useEffectEvent, useRef, useState, type MouseEvent } from "react";
 import { createPortal } from "react-dom";
 import { Mail } from "lucide-react";
+import { gsap } from "gsap";
 import jpLogo from "../assets/jp-monogram.png";
 
 const navLinks = [
@@ -27,17 +28,12 @@ function Navbar() {
   const [moreOpen, setMoreOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
   const transitionRef = useRef<HTMLDivElement>(null);
-  const transitionTimeline = useRef<ReturnType<typeof import("gsap").gsap.timeline> | null>(null);
+  const transitionTimeline = useRef<gsap.core.Timeline | null>(null);
   const transitioning = useRef(false);
-  const mounted = useRef(true);
 
-  useEffect(() => {
-    mounted.current = true;
-    return () => {
-      mounted.current = false;
-      transitionTimeline.current?.kill();
-      transitioning.current = false;
-    };
+  useEffect(() => () => {
+    transitionTimeline.current?.kill();
+    transitioning.current = false;
   }, []);
 
   useEffect(() => {
@@ -138,7 +134,7 @@ function Navbar() {
     setMoreOpen(false);
   };
 
-  const handleNavigation = (event: MouseEvent<HTMLAnchorElement>, href: string) => {
+  const handleNavigation = (event: MouseEvent<HTMLAnchorElement> | globalThis.MouseEvent, href: string) => {
     closeMenus();
     if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -148,6 +144,7 @@ function Navbar() {
     event.preventDefault();
     if (transitioning.current) return;
     transitioning.current = true;
+    const returningHome = target.id === "home" && window.scrollY > 24;
 
     const navigate = () => {
       if (window.location.hash !== href) window.history.pushState(null, "", href);
@@ -155,26 +152,39 @@ function Navbar() {
       setActiveSection(target.id);
     };
 
-    void import("gsap").then(({ gsap }) => {
-      if (!mounted.current) return;
+    const clearTransition = () => {
+      gsap.set(overlay, { autoAlpha: 0, pointerEvents: "none" });
+      transitioning.current = false;
+      transitionTimeline.current = null;
+    };
+
+    try {
       const rows = overlay.querySelectorAll<HTMLElement>("[data-transition-row]");
       gsap.set(overlay, { autoAlpha: 1, pointerEvents: "auto" });
       gsap.set(rows, { xPercent: -105 });
-      transitionTimeline.current = gsap.timeline({
-        onComplete: () => {
-          gsap.set(overlay, { autoAlpha: 0, pointerEvents: "none" });
-          transitioning.current = false;
-          transitionTimeline.current = null;
-        },
-      })
-        .to(rows, { xPercent: 0, duration: 0.43, stagger: 0.035, ease: "power3.inOut" })
+      transitionTimeline.current = gsap.timeline({ onComplete: clearTransition })
+        .to(rows, { xPercent: 0, duration: returningHome ? 0.25 : 0.43, stagger: returningHome ? 0.016 : 0.035, ease: "power3.inOut" })
         .call(navigate)
-        .to(rows, { xPercent: 105, duration: 0.48, stagger: 0.035, ease: "power3.inOut" }, "+=0.08");
-    }).catch(() => {
-      if (mounted.current) navigate();
-      transitioning.current = false;
-    });
+        .addLabel("uncover", returningHome ? "+=0" : "+=0.08")
+        .to(rows, { xPercent: 105, duration: returningHome ? 0.34 : 0.48, stagger: returningHome ? 0.016 : 0.035, ease: "power3.inOut" }, "uncover");
+    } catch {
+      transitionTimeline.current?.kill();
+      clearTransition();
+      navigate();
+    }
   };
+
+  const handleSectionLink = useEffectEvent((event: globalThis.MouseEvent) => {
+    if (!(event.target instanceof Element)) return;
+    const link = event.target.closest<HTMLAnchorElement>('a[data-section-transition][href^="#"]');
+    if (link) handleNavigation(event, link.hash);
+  });
+
+  useEffect(() => {
+    const onClick = (event: globalThis.MouseEvent) => handleSectionLink(event);
+    document.addEventListener("click", onClick);
+    return () => document.removeEventListener("click", onClick);
+  }, []);
 
   const isActive = (href: string) => activeSection === href.slice(1);
   const contactActive = isActive(contactHref);
@@ -212,7 +222,7 @@ function Navbar() {
   };
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/12 bg-[#091a2e]">
+    <header data-site-nav className="fixed inset-x-0 top-0 z-50 border-b border-white/12 bg-[#091a2e]">
       <nav
         ref={navRef}
         className="mx-auto flex min-h-[76px] max-w-[1440px] items-center justify-between gap-4 px-5 sm:px-8 xl:px-12"

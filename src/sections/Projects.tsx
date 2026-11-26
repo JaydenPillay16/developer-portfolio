@@ -1,5 +1,3 @@
-import { motion, useReducedMotion } from "motion/react";
-
 const projects = [
   {
     category: "Cloud engineering",
@@ -45,8 +43,6 @@ const projects = [
   },
 ];
 
-const revealEase = [0.22, 1, 0.36, 1] as const;
-
 const signalRoutes = [
   "M118 165H220",
   "M220 165V92H324",
@@ -64,7 +60,6 @@ function SystemMap() {
       </div>
 
       <svg
-        data-scroll-system-map
         viewBox="0 0 600 330"
         role="img"
         aria-label="Diagram of Amazon Connect, Amazon Lex, AWS, Terraform and GitHub Actions"
@@ -84,20 +79,13 @@ function SystemMap() {
         <rect width="600" height="330" fill="url(#project-grid)" />
 
         <g fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d={signalRoutes.join(" ")} stroke="#304d73" />
-          {signalRoutes.map((route) => (
-            <path
-              key={route}
-              data-scroll-signal
-              d={route}
-              pathLength={1}
-              stroke="#4f91ff"
-            />
+          <path d={signalRoutes.join(" ")} stroke="#34516f" />
+          {signalRoutes.map(route => (
+            <path key={route} data-signal-route d={route} pathLength="1" stroke="#4f91ff" />
           ))}
         </g>
 
         <circle
-          data-scroll-junction
           cx="220"
           cy="165"
           r="5"
@@ -156,7 +144,6 @@ function TechnologyList({ technologies }: { technologies: string[] }) {
 }
 
 function Projects() {
-  const shouldReduceMotion = useReducedMotion() ?? false;
   const featuredProject = projects[0];
   const additionalProjects = projects.slice(1);
 
@@ -166,27 +153,18 @@ function Projects() {
       aria-labelledby="projects-heading"
       className="portfolio-projects scroll-mt-24 bg-[#f3f7fc] text-[#0b1b30]"
     >
+      <div className="color-shift" aria-hidden="true"><span className="color-shift__rule" /></div>
       <div className="mx-auto max-w-7xl px-5 pb-20 pt-20 sm:px-8 sm:pb-24 sm:pt-24 lg:px-12 lg:pb-28 lg:pt-28">
-        <motion.header
-          initial={shouldReduceMotion ? false : { opacity: 0, y: 14 }}
-          whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.35 }}
-          transition={{ duration: shouldReduceMotion ? 0 : 0.6, ease: revealEase }}
-          className="mb-10 border-b border-[#b9cbe0] pb-8 sm:mb-12 sm:pb-10"
-        >
+        <header className="mb-10 border-b border-[#b9cbe0] pb-8 sm:mb-12 sm:pb-10">
           <h2
             id="projects-heading"
             className="max-w-3xl text-4xl font-bold leading-[0.98] tracking-[-0.055em] sm:text-5xl lg:text-6xl"
           >
             Selected work
           </h2>
-        </motion.header>
+        </header>
 
-        <motion.article
-          initial={shouldReduceMotion ? false : { opacity: 0, y: 18 }}
-          whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.16 }}
-          transition={{ duration: shouldReduceMotion ? 0 : 0.65, ease: revealEase }}
+        <article
           className="relative left-1/2 grid w-screen -translate-x-1/2 overflow-hidden bg-[#091a2e] text-white lg:grid-cols-[minmax(0,1fr)_minmax(400px,0.9fr)]"
         >
           <div className="mx-auto w-full max-w-7xl px-5 py-10 sm:px-8 sm:py-14 lg:col-span-2 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(400px,0.9fr)] lg:gap-12 lg:px-12 lg:py-[4.5rem] xl:gap-20">
@@ -211,20 +189,12 @@ function Projects() {
               <SystemMap />
             </div>
           </div>
-        </motion.article>
+        </article>
 
         <div className="border-b border-[#b9cbe0]">
-          {additionalProjects.map((project, index) => (
-            <motion.article
+          {additionalProjects.map((project) => (
+            <article
               key={project.title}
-              initial={shouldReduceMotion ? false : { opacity: 0, y: 14 }}
-              whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.25 }}
-              transition={{
-                duration: shouldReduceMotion ? 0 : 0.55,
-                delay: shouldReduceMotion ? 0 : index * 0.08,
-                ease: revealEase,
-              }}
               className="grid gap-4 border-b border-[#c9d7e7] py-8 last:border-b-0 sm:py-10 lg:grid-cols-[minmax(180px,0.7fr)_minmax(0,1.8fr)_minmax(190px,0.8fr)] lg:gap-10 lg:py-11"
             >
               <div>
@@ -252,7 +222,7 @@ function Projects() {
                 </p>
                 <TechnologyList technologies={project.technologies} />
               </div>
-            </motion.article>
+            </article>
           ))}
         </div>
       </div>

@@ -1,5 +1,5 @@
+import SectionEdge from "../components/SectionEdge";
 import { CheckIcon, ReaderIcon, SewingPinIcon } from "@radix-ui/react-icons";
-import { motion, useReducedMotion } from "motion/react";
 import { useState } from "react";
 
 const education = [
@@ -47,13 +47,11 @@ const education = [
   },
 ];
 
-const ease = [0.22, 1, 0.36, 1] as const;
 const pageLineWidths = ["w-full", "w-4/5", "w-[92%]", "w-[62%]"];
 
 function OpenBook() {
   return (
     <div
-      data-scroll-book
       aria-hidden="true"
       className="pointer-events-none mx-auto w-full max-w-[26rem] py-6 sm:py-10"
     >
@@ -69,7 +67,7 @@ function OpenBook() {
               }`}
             >
               <div
-                data-scroll-page={side}
+                data-book-page={side}
                 className={`relative border border-[#6299ff] bg-[#10294f] p-[clamp(1rem,3vw,2rem)] shadow-[0_5px_0_#0b1e39,0_6px_0_#416596,0_11px_0_#0b1e39,0_12px_0_#294975] ${
                   isLeft ? "origin-right rounded-tl-lg" : "origin-left rounded-tr-lg border-l-0"
                 }`}
@@ -78,8 +76,7 @@ function OpenBook() {
                   {pageLineWidths.map((width) => (
                     <span
                       key={width}
-                      data-scroll-page-rule
-                      className={`block h-px origin-left bg-[#6299ff]/65 ${width}`}
+                      className={`block h-px bg-[#6299ff]/65 ${width}`}
                     />
                   ))}
                 </div>
@@ -119,22 +116,16 @@ function InstitutionMark({ item }: { item: (typeof education)[number] }) {
 }
 
 export default function Education() {
-  const reduceMotion = useReducedMotion() ?? false;
-
   return (
     <section
       id="education"
       aria-labelledby="education-heading"
       className="education-section bg-[#f3f7fc] text-[#0b1b30]"
     >
+      <SectionEdge shape="fold" />
       <header className="border-t-2 border-[#2673f7] bg-[#091a2e] text-white">
         <div className="mx-auto grid max-w-7xl items-center gap-6 px-5 py-12 sm:px-8 sm:py-16 md:grid-cols-[1.2fr_0.8fr] md:gap-10 lg:px-12 lg:py-20">
-          <motion.div
-            initial={reduceMotion ? false : { opacity: 0.55, y: 18 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.35 }}
-            transition={{ duration: reduceMotion ? 0 : 0.65, ease }}
-          >
+          <div>
             <h2
               id="education-heading"
               className="text-[clamp(3rem,8vw,6.25rem)] leading-[0.95] font-bold tracking-[-0.065em]"
@@ -145,7 +136,7 @@ export default function Education() {
               The foundation that shaped my journey into software engineering,
               cloud technology, and automation.
             </p>
-          </motion.div>
+          </div>
           <OpenBook />
         </div>
       </header>
@@ -156,11 +147,7 @@ export default function Education() {
       >
         {education.map((item, index) => (
           <li key={item.qualification}>
-            <motion.article
-              initial={reduceMotion ? false : { opacity: 0.6, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.18 }}
-              transition={{ duration: reduceMotion ? 0 : 0.65, ease }}
+            <article
               className="grid gap-5 py-9 sm:py-12 md:grid-cols-[minmax(0,12rem)_minmax(0,1fr)] md:gap-8 lg:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] lg:gap-12 lg:py-16"
             >
               <div className="flex items-center justify-between gap-4 md:flex-col md:items-start md:justify-start md:gap-7">
@@ -170,11 +157,13 @@ export default function Education() {
                     {" to "}
                     <time dateTime={item.to}>{item.to}</time>
                   </p>
-                  <p className="mt-2 flex items-center gap-1.5 text-sm font-semibold text-[#30455d]">
-                    <CheckIcon
-                      aria-hidden="true"
-                      className="size-4 shrink-0 text-[#1458cf]"
-                    />
+                  <p className="mt-3 inline-flex items-center gap-2.5 rounded-full border border-[#b8cce4] bg-white py-1 pl-1 pr-3 text-xs font-bold uppercase tracking-[0.08em] text-[#244363] shadow-[0_1px_2px_rgba(11,27,48,0.05)] sm:mt-3.5">
+                    <span className="grid size-6 shrink-0 place-items-center rounded-full bg-[#e7f0ff]">
+                      <CheckIcon
+                        aria-hidden="true"
+                        className="size-3.5 text-[#1458cf]"
+                      />
+                    </span>
                     {item.status}
                   </p>
                 </div>
@@ -227,7 +216,7 @@ export default function Education() {
                   </ul>
                 </div>
               </div>
-            </motion.article>
+            </article>
           </li>
         ))}
       </ol>

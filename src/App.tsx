@@ -30,12 +30,12 @@ function App() {
       document.getElementById(initialAnchor)?.scrollIntoView({ behavior: "instant" });
     });
 
-    void import("./scrollMotion")
-      .then(({ installScrollMotion }) => {
-        if (!disposed) cleanup = installScrollMotion(main, progress);
+    void import("./scrollProgress")
+      .then(({ installScrollProgress }) => {
+        if (!disposed) cleanup = installScrollProgress(main, progress);
       })
       .catch((error: unknown) => {
-        console.error("Unable to initialize portfolio scroll effects", error);
+        console.error("Unable to initialize scroll progress", error);
       });
 
     return () => {
@@ -65,11 +65,9 @@ function App() {
         <BackToTop />
 
         <main ref={mainRef} id="main-content" tabIndex={-1} className="relative">
+          <div className="hero-gradient-reveal" aria-hidden="true" />
           <Hero />
           <About />
-          <svg aria-hidden="true" className="hero-about-arc" data-hero-about-arc>
-            <path fill="none" stroke="#3d82f8" strokeWidth="2" strokeLinecap="round" />
-          </svg>
           <Skills />
           <Projects />
           <Experience />

@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Halo and scroll studies | Jayden Pillay</title>
+  <style>
+    @font-face {
+      font-family: Space;
+      src: url("../../../public/fonts/space-grotesk-latin-wght-normal.woff2");
+      font-weight: 300 700;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: DM;
+      src: url("../../../public/fonts/dm-sans-latin-wght-normal.woff2");
+      font-weight: 100 1000;
+      font-display: swap;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f3f7fc; color: #0b1b30; font: 16px/1.55 DM, Arial, sans-serif; }
+    .wrap { width: min(1440px, 100%); margin: auto; padding-inline: clamp(20px, 5vw, 72px); }
+    header { background: #091a2e; color: #fff; border-bottom: 3px solid #2875ff; }
+    .brand { display: flex; align-items: center; gap: 14px; padding-block: 20px; border-bottom: 1px solid #304761; font-weight: 700; }
+    .brand img { width: 53px; }
+    h1, h2 { font-family: Space, Arial, sans-serif; letter-spacing: -.045em; line-height: 1; }
+    h1 { margin: 0 0 18px; font-size: clamp(48px, 7vw, 92px); }
+    h2 { margin-block: 18px 8px; font-size: clamp(30px, 3vw, 46px); }
+    .heading { padding-block: 44px 38px; }
+    .heading p { max-width: 62ch; margin: 0; color: #c8d9ed; }
+    .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(16px, 2.4vw, 32px); padding-block: 42px 52px; }
+    section { border-bottom: 1px solid #bacbdf; padding-bottom: 24px; }
+    section p { margin: 0 0 12px; color: #324960; }
+    video { display: block; width: 100%; aspect-ratio: 8 / 5; background: #091a2e; }
+    .note { max-width: 66ch; margin: 0 0 40px; color: #324960; }
+    a { color: #154dba; }
+    a:focus-visible, video:focus-visible { outline: 3px solid #1461ec; outline-offset: 4px; }
+    @media (max-width: 860px) {
+      .grid { grid-template-columns: 1fr; max-width: 660px; }
+      section { padding-bottom: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="brand"><img src="../../../public/jp-logo.png" alt="">Jayden Pillay</div>
+      <div class="heading">
+        <h1>Light behind the portrait.</h1>
+        <p>Three halos, each with the same scroll into About. Play each five-second preview to see the light come in and the arc straighten beside the About label.</p>
+      </div>
+    </div>
+  </header>
+  <main class="wrap">
+    <div class="grid">
+      <section>
+        <video controls playsinline preload="none" poster="cobalt-bloom.jpg" src="cobalt-bloom.mp4" aria-label="Cobalt Bloom motion preview"></video>
+        <h2>Cobalt Bloom</h2>
+        <p>A soft, full disc expands behind the portrait. Its broad light separates your hair and suit from the navy background.</p>
+        <a href="cobalt-bloom.jpg">Full hero still</a>
+      </section>
+      <section>
+        <video controls playsinline preload="none" poster="blue-eclipse.jpg" src="blue-eclipse.mp4" aria-label="Blue Eclipse motion preview"></video>
+        <h2>Blue Eclipse</h2>
+        <p>A bright crescent sweeps around a darker center. The lit edge gives the arc a clear starting point as you scroll.</p>
+        <a href="blue-eclipse.jpg">Full hero still</a>
+      </section>
+      <section>
+        <video controls playsinline preload="none" poster="double-orbit.jpg" src="double-orbit.mp4" aria-label="Double Orbit motion preview"></video>
+        <h2>Double Orbit</h2>
+        <p>Two tilted rings open behind the portrait. Cobalt and cyan light mark the two edges as they settle.</p>
+        <a href="double-orbit.jpg">Full hero still</a>
+      </section>
+    </div>
+    <p class="note">These clips follow one sample scroll. On the site, your scroll position would control the transition in either direction.</p>
+  </main>
+</body>
+</html>

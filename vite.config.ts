@@ -4,4 +4,13 @@ import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  build: {
+    rolldownOptions: {
+      output: {
+        codeSplitting: {
+          groups: [{ name: "gsap", test: /[/\\]node_modules[/\\]gsap[/\\](index|gsap-core|CSSPlugin)\.js$/ }],
+        },
+      },
+    },
+  },
 });

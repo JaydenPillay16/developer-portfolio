@@ -87,6 +87,7 @@ main > section {
 
 main > section.about-section {
   background-image: none;
+  position: relative;
 }
 
 main > section.experience-section {
@@ -129,118 +130,52 @@ main > section.contact-section {
   pointer-events: none;
 }
 
-.home-hero-halo-light,
-.home-hero-halo canvas {
+.home-hero-halo-light {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-}
-
-.home-hero-halo-light {
   background: linear-gradient(112deg, #122557 6%, #1546a7 47%, #2388f0 93%);
   mask-image: radial-gradient(circle closest-side, #000 0 77%, #000d 84%, #0006 92%, transparent 100%);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .home-hero-halo-light {
-    animation: cobalt-bloom 1.2s cubic-bezier(.19, 1, .22, 1) both;
-  }
-}
+.blueprint-cover { display: none; }
 
-@keyframes cobalt-bloom {
-  from { transform: scale(.62); opacity: .2; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-.hero-about-arc {
-  position: absolute;
-  inset: 0 0 auto;
-  z-index: 25;
-  width: 100%;
-  height: 1px;
-  overflow: visible;
-  pointer-events: none;
-  visibility: hidden;
-}
-
-main > section:has(> .section-handoff) {
-  position: relative;
-}
-
-.section-handoff {
-  position: absolute;
-  inset: auto 0 100%;
-  z-index: 1;
-  height: clamp(24px, 5vw, 72px);
-  overflow: clip;
-  pointer-events: none;
-  --handoff-surface: #f3f7fc;
-  --handoff-tint: #dce9fa;
-}
-
-:is(#skills, #education, #certifications) > .section-handoff {
-  --handoff-surface: #091a2e;
-  --handoff-tint: #1c3e67;
-}
-
-.section-handoff--horizon {
-  inset: -1px 0 auto;
-  height: clamp(38px, 6vw, 82px);
-}
-
-.section-handoff--horizon > div {
-  position: absolute;
-  inset: -2px -5% auto;
-  height: calc(100% - 17px);
-  border-radius: 0 0 50% 50% / 0 0 100% 100%;
-  background: #07111f;
-  box-shadow: 0 2px 0 #9dc4ff, 0 5px 11px rgb(40 117 255 / 68%),
-    0 10px 16px rgb(40 117 255 / 28%);
-  transform-origin: center top;
-}
-
-.section-handoff--split {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  transform-origin: center bottom;
-}
-
-.section-handoff--split > div {
-  background: linear-gradient(180deg, var(--handoff-tint), var(--handoff-surface) 68%);
-}
-
-.section-handoff--pixels {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(0, 1fr);
-  align-items: end;
-  --handoff-surface: #edf3fa;
-  --pixel-unit: clamp(6px, 1.15vw, 16px);
-  height: calc(var(--pixel-unit) * 6);
-}
-
-.section-handoff--pixels > div {
-  position: relative;
-  height: calc(var(--pixel-unit) * var(--pixel-height));
-  background: var(--handoff-surface);
-  transform-origin: center bottom;
-}
-
-.section-handoff__pixel-accent::before {
+#home[data-blueprint]::after {
   content: "";
-  position: absolute;
-  bottom: 100%;
-  inset-inline-start: 25%;
-  width: var(--pixel-unit);
-  height: var(--pixel-unit);
-  background: #4386f2;
+  display: block;
+  height: clamp(300px, 85svh, 800px);
 }
-
-@media (prefers-reduced-motion: reduce) {
-  .section-handoff {
-    display: none;
-  }
+#home[data-blueprint] .hero-stage { position: sticky; top: 0; isolation: isolate; }
+#home[data-blueprint] .home-hero { min-height: 100svh; }
+#home[data-blueprint] .blueprint-cover {
+  display: block; position: absolute; inset: 0; overflow: hidden;
+  background: #07111f; perspective: 1000px;
+}
+.blueprint-mark {
+  position: absolute; left: 50%; top: 50svh; width: clamp(92px, 9vw, 152px);
+  translate: -50% -50%;
+}
+.blueprint-enter { display: block; width: 100%; cursor: pointer; }
+.blueprint-enter:focus-visible { outline: 2px solid #94caff; outline-offset: 10px; }
+.blueprint-glint, .blueprint-rule {
+  position: absolute; left: 90.5%; top: 81.6%; pointer-events: none;
+}
+.blueprint-glint {
+  width: 5%; aspect-ratio: 1; border-radius: 50%; translate: -50% -50%;
+  background: #c3e6ff; box-shadow: 0 0 8px #459aff; opacity: 0;
+}
+.blueprint-rule {
+  width: 52vw; height: 1px; transform-origin: left center;
+  background: linear-gradient(90deg, #84c6ff, #397efa 70%, transparent);
+}
+.blueprint-sheet {
+  position: absolute; inset: 0; height: 100svh;
+  transform-origin: center calc(50svh + clamp(18px, 1.75vw, 30px));
+  background-image: linear-gradient(#3d82cc44 1px, transparent 1px),
+    linear-gradient(90deg, #3d82cc44 1px, transparent 1px);
+  background-size: 48px 48px; background-position: center;
+  mask-image: radial-gradient(ellipse, black 12%, transparent 74%);
 }
 
 .portfolio-projects { background: #edf3fa; color: #0b1b30; background-image: none; }
@@ -352,3 +287,87 @@ button {
 }
 
 \n
+
+/* The outgoing surface forms the leading edge of each arriving section. */
+main > section:has(> .section-edge) { position: relative; }
+.section-edge {
+  display: none;
+  pointer-events: none;
+  position: absolute;
+  z-index: 3;
+  inset: -1px 0 auto;
+  height: clamp(64px, 16svh, 168px);
+  overflow: clip;
+  perspective: 850px;
+  --edge-paper: #f3f7fc;
+}
+#about > .section-edge { --edge-paper: #07111f; }
+:is(#projects, #contact) > .section-edge { --edge-paper: #091a2e; }
+#experience > .section-edge { --edge-paper: #edf3fa; height: clamp(40px, 10svh, 90px); }
+.section-edge svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform-origin: center top;
+}
+.section-edge-face { fill: var(--edge-paper); }
+.section-edge-rim { fill: #377dfa; }
+[data-edge="fold"] .section-edge-rim { fill: #6a9aee; }
+@media (prefers-reduced-motion: no-preference) {
+  .section-edge[data-ready] { display: block; }
+}
+@media print {
+  .section-edge[data-ready] { display: none; }
+}
+/* A shared, scroll-driven color wash crosses the About-to-Experience story. */
+.color-shift { display: none; }
+@media (prefers-reduced-motion: no-preference) {
+  main[data-color-shift] .color-shift {
+    display: block;
+    position: absolute;
+    inset: -72px 0 auto;
+    height: min(100svh, 832px);
+    z-index: 0;
+    opacity: 0;
+    transform-origin: center top;
+    pointer-events: none;
+    background: radial-gradient(ellipse 82% 78% at 50% 12%, var(--wash-core) 0%, var(--wash-edge) 48%, transparent 83%);
+  }
+  :is(#about, #skills, #projects, #experience) > div:not(.color-shift) {
+    position: relative;
+    z-index: 1;
+  }
+}
+#about { --wash-core: #a9d3ff; --wash-edge: #d8eaff; --wash-rule: #1967f7; }
+#skills { --wash-core: #2258a7; --wash-edge: #0f325d; --wash-rule: #77b7ff; }
+#projects { --wash-core: #9bc9ff; --wash-edge: #d5e8ff; --wash-rule: #1765f5; }
+#experience { --wash-core: #b6d7ff; --wash-edge: #dbeaff; --wash-rule: #1765f5; }
+.color-shift__rule {
+  display: block;
+  width: 100%;
+  height: 3px;
+  transform-origin: left center;
+  background: linear-gradient(90deg, transparent, var(--wash-rule) 18%, var(--wash-rule) 82%, transparent);
+}
+@media print { .color-shift { display: none !important; } }
+
+/* Overscan lets the soft crest cover the seam before it exits above About. */
+.hero-gradient-reveal {
+  position: fixed;
+  z-index: 35;
+  inset: 0 -16vw auto;
+  height: 100svh;
+  visibility: hidden;
+  pointer-events: none;
+  background: radial-gradient(ellipse 100% 82% at 50% 100%,
+    #050d1a 0% 48%,
+    #0a1830 58%,
+    #12366d 70%,
+    #3479db 79%,
+    #79b5f052 89%,
+    transparent 100%);
+}
+@media (prefers-reduced-motion: reduce), print {
+  .hero-gradient-reveal { display: none; }
+}

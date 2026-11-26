@@ -1,3 +1,4 @@
+import SectionEdge from "../components/SectionEdge";
 import { useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import jpLogo from "../assets/jp-monogram.png";
 
@@ -173,9 +174,10 @@ function Contact() {
       aria-labelledby="contact-heading"
       className="contact-section bg-[#f3f7fc] text-[#0b1b30]"
     >
+      <SectionEdge shape="arc" />
       <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-28">
         <div className="grid min-w-0 items-start gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:gap-16 xl:gap-24">
-          <div data-scroll-reveal>
+          <div>
             <h2
               id="contact-heading"
               className="max-w-xl text-balance text-[clamp(2.75rem,6vw,5rem)] font-bold leading-[0.98] tracking-[-0.055em]"
@@ -394,6 +396,7 @@ function Contact() {
             <div>
               <a
                 href="#home"
+                data-section-transition
                 aria-label="Jayden Pillay - Home"
                 className="group inline-flex items-center gap-3 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
               >

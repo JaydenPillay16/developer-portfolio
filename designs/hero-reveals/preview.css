@@ -1,0 +1,111 @@
+body { background: #0c1522; color: #edf4fc; }
+.study-shell { width: min(1520px, 100%); margin: 0 auto; padding: 32px clamp(16px, 3.5vw, 56px) 46px; }
+.study-header { display: flex; align-items: end; justify-content: space-between; gap: 18px; }
+.study-header h1 { font-size: clamp(1.6rem, 4vw, 3.25rem); font-weight: 700; line-height: 1.04; letter-spacing: -.055em; }
+.study-header p { margin-top: 7px; color: #a7bcd4; }
+.study-header a { display: inline-flex; min-height: 44px; align-items: center; gap: 8px; color: #a9c9ff; white-space: nowrap; }
+.study-toolbar { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px 16px; margin-top: 21px; margin-bottom: 12px; }
+.study-options { display: flex; flex-wrap: wrap; gap: 5px; }
+.study-options button, .study-player button {
+  min-height: 44px; padding: 0 13px; font-size: .875rem; font-weight: 700;
+  border: 1px solid #324762; border-radius: 5px; color: #b4c7de; background: #101f31;
+}
+.study-options button:hover, .study-player button:hover { color: white; border-color: #6c95c7; }
+.study-options button[aria-pressed="true"] { border-color: #73a9ff; background: #17355d; color: #edf5ff; }
+
+.study-stage { position: relative; isolation: isolate; overflow: hidden; border: 1px solid #334b66; border-radius: 8px; }
+.study-nav {
+  position: absolute; inset: 0 0 auto; z-index: 30; height: 60px; padding: 0 clamp(18px, 4vw, 56px);
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  background: #091a2e; border-bottom: 1px solid #fff2; font-size: .84rem; font-weight: 700;
+}
+.study-brand img { width: 49px; height: 37px; object-fit: contain; }
+.study-nav nav { display: flex; align-items: center; gap: clamp(12px, 2.2vw, 36px); color: #bbccdf; }
+.study-nav button, .study-nav a { min-height: 44px; display: inline-flex; align-items: center; }
+.study-nav nav button { color: #b9d6ff; text-decoration: underline; text-decoration-color: #74aaff; text-underline-offset: 7px; }
+.study-contact { gap: 8px; padding: 0 13px; border-radius: 5px; background: #1659cd; color: #fff; }
+.study-stage .study-hero { position: relative; isolation: isolate; display: grid; align-items: center; height: clamp(570px, 69vh, 780px); overflow: hidden; padding: 75px clamp(23px, 5.55vw, 90px) 62px; }
+.study-copy { z-index: 20; position: relative; width: min(52%, 590px); }
+.study-title { font-size: clamp(4rem, 8.5vw, 7.5rem); line-height: .86; font-weight: 700; letter-spacing: -.038em; }
+.study-title > span { display: block; overflow: clip; overflow-clip-margin: .14em; }
+.study-title > span + span { margin-top: .08em; }
+.study-title b { display: block; font-weight: inherit; }
+.study-dot { display: inline-block; color: #2875ff; transform-origin: center 75%; }
+.study-intro { max-width: 540px; margin-top: clamp(21px, 3vw, 36px); color: #e3ebf8; font-size: clamp(1.05rem, 1.85vw, 1.65rem); line-height: 1.4; letter-spacing: -.025em; }
+.study-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 14px 24px; margin-top: clamp(20px, 3vw, 34px); }
+.study-work { display: inline-flex; align-items: center; justify-content: space-between; gap: 22px; min-height: 54px; padding: 0 22px; border-radius: 5px; background: #2875ff; box-shadow: 0 5px #1748a7; color: white; font-weight: 800; }
+.study-cv { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; border-bottom: 1px solid #a9caff; font-size: .875rem; font-weight: 700; }
+.study-hero-foot { position: absolute; z-index: 20; inset: auto 0 0; display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 45px; padding: 0 clamp(23px, 5.55vw, 90px); border-top: 1px solid #fff4; color: #cddbf1; font-size: .75rem; }
+.study-hero-foot span span { margin-inline: .5em; }
+.study-hero-foot a { color: #9dc4ff; }
+.study-portrait { position: absolute; z-index: 5; inset: 61px 0 0 auto; width: 63%; overflow: hidden; }
+.study-portrait img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: center bottom; filter: brightness(1.075); transform-origin: 54% 75%; }
+.study-shade { z-index: 10; position: absolute; inset: 0; pointer-events: none; }
+.study-stage .study-halo { top: 52%; width: min(46vw, 584px); }
+.study-stage .study-halo .home-hero-halo-light { animation: none; }
+.aperture-rays, .study-orbit, .orbit-fallback { position: absolute; inset: 0; pointer-events: none; }
+.aperture-rays i { position: absolute; inset: 9% auto 9% 50%; width: 2px; background: linear-gradient(transparent, #80c3ff 36%, #e2f6ff 52%, transparent); box-shadow: 0 0 21px 2px #4f9dff; opacity: 0; }
+.study-orbit { opacity: 0; }
+.study-orbit canvas { display: block; width: 100%; height: 100%; }
+.orbit-fallback { inset: 9%; }
+.orbit-fallback i { position: absolute; inset: 22% 0; border: 1px solid #9bccffb0; border-radius: 50%; rotate: -28deg; }
+.orbit-fallback i:nth-child(2) { inset: 12% 19%; rotate: 39deg; border-color: #549dff90; }
+.orbit-fallback i:nth-child(3) { inset: 22% 0; border-color: #cfeaff transparent transparent transparent; rotate: -28deg; }
+.study-orbit[data-webgl] .orbit-fallback { display: none; }
+.study-grid-frame { position: absolute; z-index: 4; inset: 78px 5% 46px; perspective: 780px; pointer-events: none; }
+.blueprint-grid {
+  position: absolute; inset: 0; opacity: 0; transform-origin: center bottom;
+  background-image: linear-gradient(90deg, #5e9fff45 1px, transparent 1px), linear-gradient(#5e9fff45 1px, transparent 1px);
+  background-size: 42px 42px; mask-image: radial-gradient(ellipse at 70% 58%, black 14%, #000c 48%, transparent 78%);
+}
+.blueprint-brackets { position: absolute; inset: 9% 1% 11% 54%; }
+.blueprint-brackets i { position: absolute; width: 19px; height: 19px; opacity: 0; border: solid #91c6ff; border-width: 1px 0 0 1px; }
+.blueprint-brackets i:nth-child(1) { top: 0; left: 0; }
+.blueprint-brackets i:nth-child(2) { top: 0; right: 0; rotate: 90deg; }
+.blueprint-brackets i:nth-child(3) { bottom: 0; right: 0; rotate: 180deg; }
+.blueprint-brackets i:nth-child(4) { bottom: 0; left: 0; rotate: 270deg; }
+.study-previous { display: none; position: absolute; inset: 60px 0 0; z-index: 25; background: #edf3fa; overflow: hidden; }
+.study-stage[data-returning] .study-previous { display: block; }
+.study-previous > section { scroll-margin: 0; }
+.study-rows { position: absolute; z-index: 35; inset: 0; display: grid; grid-template-rows: repeat(12, minmax(0, 1fr)); pointer-events: none; }
+.study-rows span { display: block; visibility: hidden; background: #091a2e; }
+
+.study-player { display: flex; align-items: center; gap: 8px; margin: 12px 0 0; }
+.study-player button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-width: 88px; }
+.study-player input { width: 100%; min-width: 30px; min-height: 44px; margin: 0 5px; accent-color: #77abff; cursor: pointer; }
+.study-player output { min-width: 91px; color: #a7bcd4; text-align: right; font-size: .82rem; font-variant-numeric: tabular-nums; }
+.study-notes { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 28px; margin-top: 22px; padding-top: 23px; border-top: 1px solid #334b66; }
+.study-notes h2, .study-notes h3 { margin: 0 0 6px; color: #f4f8ff; font-size: 1.15rem; font-weight: 700; letter-spacing: -.025em; }
+.study-notes p { max-width: 65ch; color: #b7cbe1; line-height: 1.55; }
+.study-notes p + p { margin-top: 8px; }
+.study-notes small { display: block; margin-top: 10px; color: #94bfff; }
+
+@media (max-width: 850px) {
+  .study-stage .study-hero { align-items: start; padding-top: 92px; height: 650px; }
+  .study-copy { width: 100%; }
+  .study-portrait { inset: auto 0 0; width: 100%; height: 49%; }
+  .study-stage .study-halo { left: 50%; top: auto; bottom: 3%; translate: -50% 0; width: min(65vw, 360px); }
+  .blueprint-brackets { inset: 47% 11% 8%; }
+}
+
+@media (max-width: 570px) {
+  .study-shell { padding: 22px 12px 32px; }
+  .study-header { align-items: start; }
+  .study-header a { font-size: .78rem; }
+  .study-header p { font-size: .85rem; }
+  .study-options button { padding: 0 8px; font-size: .78rem; }
+  .study-nav { padding-inline: 12px; }
+  .study-nav nav a { display: none; }
+  .study-contact { padding-inline: 8px; }
+  .study-stage .study-hero { padding-inline: 19px; height: 605px; }
+  .study-title { font-size: clamp(3.45rem, 12vw, 4.6rem); }
+  .study-actions { gap: 11px 14px; }
+  .study-work { min-height: 48px; padding: 0 11px; gap: 10px; font-size: .84rem; }
+  .study-cv { font-size: .78rem; }
+  .study-hero-foot { padding-inline: 12px; font-size: .68rem; }
+  .study-portrait { height: min(45%, 67vw); }
+  .study-notes { grid-template-columns: 1fr; gap: 16px; }
+  .study-player { gap: 5px; }
+  .study-player button { min-width: 65px; padding: 0 7px; font-size: .76rem; }
+  .study-player output { min-width: 76px; font-size: .74rem; }
+}

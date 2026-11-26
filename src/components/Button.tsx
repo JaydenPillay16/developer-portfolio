@@ -4,6 +4,7 @@ type ButtonProps = {
   children: ReactNode;
   variant?: "primary" | "secondary" | "outline";
   href?: string;
+  animateNavigation?: boolean;
   onClick?: MouseEventHandler<HTMLButtonElement>;
   type?: ButtonHTMLAttributes<HTMLButtonElement>["type"];
   className?: string;
@@ -13,6 +14,7 @@ function Button({
   children,
   variant = "primary",
   href,
+  animateNavigation,
   onClick,
   type = "button",
   className = "",
@@ -55,6 +57,7 @@ function Button({
     return (
       <a
         href={href}
+        data-section-transition={animateNavigation ? "" : undefined}
         className={`${baseStyles} ${variants[variant]} ${className}`}
       >
         {content}

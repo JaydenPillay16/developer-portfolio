@@ -52,12 +52,11 @@ function About() {
       <div className="mx-auto w-full max-w-7xl px-5 py-20 sm:px-8 sm:py-24 lg:px-12 lg:py-28">
         <p className="mb-5 flex items-center gap-4 text-xs font-bold uppercase tracking-[0.16em] text-[#145ee8] sm:text-sm">
           About
-          <span aria-hidden="true" data-about-rule className="h-0.5 flex-1 bg-[#3d82f8]" />
+          <span aria-hidden="true" className="h-0.5 flex-1 bg-[#3d82f8]" />
         </p>
-        <header data-scroll-reveal className="max-w-4xl">
+        <header className="max-w-4xl">
           <h2 className="max-w-3xl text-4xl font-bold leading-[0.98] tracking-[-0.055em] sm:text-5xl lg:text-6xl">
-            A little more
-            <br className="hidden sm:block" /> about me
+            A little more<br />about me
           </h2>
 
           <p className="mt-6 text-lg font-semibold leading-7 tracking-[-0.02em] text-[#10243b] sm:text-xl">
@@ -97,27 +96,29 @@ function About() {
           <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.15em] text-[#145ee8] sm:mb-5 sm:text-sm">
             Areas of focus
           </h3>
-          <ul className="grid grid-cols-2 gap-x-6 sm:grid-cols-3 lg:grid-cols-5">
+          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
             {skills.map((skill) => (
               <li
                 key={skill.name}
-                className="flex min-h-14 items-center gap-3 border-b border-[#cfdae7] py-3 text-sm font-semibold text-[#142b45] sm:min-h-16 sm:text-base"
+                className="flex min-h-[76px] items-center gap-3 rounded-lg border border-[#cbd8e7] bg-white px-3 py-3 text-sm font-semibold text-[#142b45] shadow-[0_1px_2px_rgba(11,27,48,0.04)] sm:gap-3.5 sm:px-4 sm:text-base"
               >
-                {skill.type === "icon" ? (
-                  <Workflow
-                    aria-hidden="true"
-                    className="h-5 w-5 shrink-0 text-[#145ee8]"
-                    strokeWidth={1.8}
-                  />
-                ) : (
-                  <img
-                    src={skill.icon}
-                    alt=""
-                    aria-hidden="true"
-                    loading="lazy"
-                    className="h-5 w-5 shrink-0 object-contain"
-                  />
-                )}
+                <span className={`flex size-10 shrink-0 items-center justify-center rounded-md border ${skill.name === "AWS" ? "border-[#173b64] bg-[#102b49]" : "border-[#e0e8f1] bg-[#edf3fa]"}`}>
+                  {skill.type === "icon" ? (
+                    <Workflow
+                      aria-hidden="true"
+                      className="h-5 w-5 text-[#145ee8]"
+                      strokeWidth={1.8}
+                    />
+                  ) : (
+                    <img
+                      src={skill.icon}
+                      alt=""
+                      aria-hidden="true"
+                      loading="lazy"
+                      className={`${skill.name === "AWS" ? "h-6 w-8" : "h-6 w-6"} object-contain`}
+                    />
+                  )}
+                </span>
                 <span>{skill.name}</span>
               </li>
             ))}

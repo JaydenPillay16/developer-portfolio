@@ -24,14 +24,14 @@ The portfolio uses a dark navy, cobalt blue, and cool white visual system. Its r
 | [React](https://react.dev/) and [TypeScript](https://www.typescriptlang.org/) | Component-based interface and application code |
 | [Vite](https://vite.dev/) | Local development and production builds |
 | [Tailwind CSS](https://tailwindcss.com/) | Responsive styling |
-| [GSAP](https://gsap.com/) and ScrollTrigger | Timelines and scroll-linked section animations |
-| [Three.js](https://threejs.org/) | The optional WebGL light sweep behind the hero portrait |
+| [GSAP](https://gsap.com/) and ScrollTrigger | Hero reveal, click transitions, and scroll progress |
+| [Three.js](https://threejs.org/) | Optional WebGL effects in the local motion previews |
 | [Motion for React](https://motion.dev/) | Interface transitions and interaction feedback |
 | [Lucide React](https://lucide.dev/) and React Icons | Interface and technology icons |
 | [EmailJS](https://www.emailjs.com/) | Contact form message delivery |
 | [GitHub](https://github.com/) and [Vercel](https://vercel.com/) | Source control and deployment |
 
-The hero uses a transparent portrait cutout and a CSS halo. The Three.js sweep loads lazily on larger screens, pauses when it is off-screen or the tab is hidden, and is skipped when reduced motion is enabled. The site provides static fallbacks for reduced motion and unsupported WebGL.
+The JP monogram opens into the hero through a scroll-linked blueprint reveal. A cobalt gradient crest then rises from the hero into About and reverses with upward scrolling. The project diagram and experience timeline also follow native scroll progress. Reduced motion shows the complete hero and diagrams immediately.
 
 ## Run it locally
 
@@ -70,8 +70,8 @@ src/
 ├── assets/             # Imported brand assets
 ├── components/         # Shared interface components and hero animation
 ├── sections/           # Hero, About, Skills, Experience, Projects, and other sections
-├── App.tsx             # Page composition and scroll animation setup
-└── scrollMotion.ts     # GSAP ScrollTrigger effects and hero-to-About handoff
+├── App.tsx             # Page composition and scroll progress setup
+└── scrollProgress.ts   # ScrollTrigger for the navbar progress indicator
 index.html              # Page metadata and social preview settings
 ```
 
